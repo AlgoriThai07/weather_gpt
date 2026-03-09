@@ -12,6 +12,7 @@ hourlyWeather\HourlyProperties.class
 hourlyWeather\HourlyPeriod.class
 weather\WeatherAPI.class
 point\PointRoot.class
+Dashboard.class
 JavaFX.class
 weather\ProbabilityOfPrecipitation.class
 weather\Root.class
