@@ -12,6 +12,8 @@ public class Period{
     public String temperatureUnit;
     public String temperatureTrend;
     public ProbabilityOfPrecipitation probabilityOfPrecipitation;
+    public DewPoint dewpoint;
+    public Humidity relativeHumidity;
     public String windSpeed;
     public String windDirection;
     public String icon;
