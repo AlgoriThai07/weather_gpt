@@ -1,8 +1,10 @@
-package weather;
+package hourlyWeather;
+
+import weather.ProbabilityOfPrecipitation;
 
 import java.util.Date;
 
-public class Period{
+public class HourlyPeriod{
     public int number;
     public String name;
     public Date startTime;
@@ -17,4 +19,7 @@ public class Period{
     public String icon;
     public String shortForecast;
     public String detailedForecast;
+//  New classes
+    public DewPoint dewpoint;
+    public Humidity relativeHumidity;
 }

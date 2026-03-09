@@ -1,4 +1,4 @@
-package weather;
+package point;
 
 import java.util.ArrayList;
 

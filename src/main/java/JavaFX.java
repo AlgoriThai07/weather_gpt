@@ -1,3 +1,4 @@
+import hourlyWeather.HourlyPeriod;
 import javafx.application.Application;
 
 import javafx.scene.Scene;
@@ -6,8 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import weather.Period;
-import weather.PointData;
-import weather.WeatherAPI;
+import point.PointData;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class JavaFX extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("I'm a professional Weather App!");
-		ArrayList<Period> forecast = MyWeatherAPI.getForecast("LOT",77,70);
+		ArrayList<HourlyPeriod> forecast = MyWeatherAPI.getHourlyForecast("LOT",77,70);
 		PointData pointData = MyWeatherAPI.getPointData(47.62350, -122.33290);
 		if (forecast == null){
 			throw new RuntimeException("Forecast did not load");

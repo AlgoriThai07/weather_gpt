@@ -1,4 +1,4 @@
-package weather;
+package point;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
