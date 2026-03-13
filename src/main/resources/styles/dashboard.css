@@ -1,0 +1,91 @@
+.root{
+    -fx-font-family: "Segoe UI", system-ui;
+}
+.navBar{
+    -fx-background-color: linear-gradient(to bottom, #e8f4ff, #d5eafb);
+    -fx-border-color: #b0cfe8;
+    -fx-border-width: 0 0 1 0;
+}
+.navBar .image{
+    -fx-background-color: transparent;
+}
+.navBar .label{
+    -fx-font-size: 1rem;
+    -fx-font-weight: 800;
+    -fx-text-fill: #0c4a6e;
+    letter-spacing: 0.01em;
+}
+
+.comboBox {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #e8f0f8);
+    -fx-background-radius: 6;
+    -fx-border-color: #9db8d2;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 6;
+    -fx-padding: 1 5 1 5;
+    -fx-font-size: 13px;
+    -fx-text-fill: #1e293b;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+/* Hover state */
+.comboBox:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f0f7ff);
+    -fx-border-color: #38bdf8;
+}
+
+/* Focused state (the "ring" effect) */
+.comboBox:focused {
+    -fx-border-color: #0ea5e9;
+    -fx-background-insets: 0, 1;
+}
+
+/*!* 2. Styling the text cell inside the box *!*/
+/*.combo-box .list-cell {*/
+/*    -fx-background-color: transparent;*/
+/*    -fx-text-fill: #1e293b;*/
+/*    -fx-padding: 3 10 3 5;*/
+/*}*/
+
+/*!* 3. The Arrow Button area *!*/
+/*.combo-box .arrow-button {*/
+/*    -fx-background-color: transparent;*/
+/*    -fx-padding: 0 8 0 0;*/
+/*}*/
+
+/*!* The actual arrow shape *!*/
+/*.combo-box .arrow {*/
+/*    -fx-background-color: #64748b;*/
+/*    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; !* Simple triangle shape *!*/
+/*}*/
+
+/*!* 4. The Dropdown Popup (ListView) *!*/
+/*.combo-box-popup .list-view {*/
+/*    -fx-background-color: white;*/
+/*    -fx-background-radius: 8;*/
+/*    -fx-border-color: #b8d0e8;*/
+/*    -fx-border-radius: 8;*/
+/*    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 12, 0, 0, 6);*/
+/*    -fx-padding: 2;*/
+/*}*/
+
+/*!* Individual items inside the dropdown *!*/
+/*.combo-box-popup .list-cell {*/
+/*    -fx-background-color: white;*/
+/*    -fx-padding: 8 12;*/
+/*    -fx-text-fill: #334155;*/
+/*    -fx-background-radius: 4;*/
+/*}*/
+
+/*!* Hovering over an item in the dropdown *!*/
+/*.combo-box-popup .list-cell:hover {*/
+/*    -fx-background-color: #e0f2fe;*/
+/*    -fx-text-fill: #0369a1;*/
+/*}*/
+
+/*!* The currently selected item in the dropdown *!*/
+/*.combo-box-popup .list-cell:filled:selected {*/
+/*    -fx-background-color: #0ea5e9;*/
+/*    -fx-text-fill: white;*/
+/*}*/
