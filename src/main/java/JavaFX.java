@@ -6,8 +6,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import utils.IconLoader;
 import weather.Period;
 import point.PointData;
 
@@ -42,6 +44,9 @@ public class JavaFX extends Application {
 //		gridX.setText(String.valueOf(pointData.gridX));
 //		gridY.setText(String.valueOf(pointData.gridY));
 
+//		Load the icon before loading screens
+		IconLoader.preload();
+
 		FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/FXML/dashboard.fxml"));
 		Parent dashboardRoot = dashboardLoader.load();
 
@@ -51,6 +56,9 @@ public class JavaFX extends Application {
 		
 				
 //		Scene scene = new Scene(new VBox(temperature,weather,gridX,gridY), 700,700);
+		primaryStage.setTitle("WeatherGPT");
+		Image logo = new Image(getClass().getResourceAsStream("/assets/app-logo.png"));
+		primaryStage.getIcons().add(logo);
 		primaryStage.setScene(dashboardScene);
 		primaryStage.show();
 	}
