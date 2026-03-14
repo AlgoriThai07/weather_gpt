@@ -18,6 +18,8 @@ import java.util.ArrayList;
 public class JavaFX extends Application {
 	TextField temperature,weather;
 	TextField gridX,gridY;
+	TextField location;
+	String locationName;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -27,22 +29,26 @@ public class JavaFX extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 //		primaryStage.setTitle("I'm a professional Weather App!");
-//		ArrayList<HourlyPeriod> forecast = MyWeatherAPI.getHourlyForecast("LOT",77,70);
-//		PointData pointData = MyWeatherAPI.getPointData(47.62350, -122.33290);
-//		if (forecast == null){
-//			throw new RuntimeException("Forecast did not load");
-//		}
-//		temperature = new TextField();
-//		weather = new TextField();
-//		temperature.setText("Today's weather is: "+String.valueOf(forecast.get(0).temperature));
-//		weather.setText(forecast.get(0).shortForecast);
-//		if (pointData == null){
-//			throw new RuntimeException("Point Data did not load");
-//		}
-//		gridX = new TextField();
-//		gridY = new TextField();
-//		gridX.setText(String.valueOf(pointData.gridX));
-//		gridY.setText(String.valueOf(pointData.gridY));
+		ArrayList<HourlyPeriod> forecast = MyWeatherAPI.getHourlyForecast("LOT",77,70);
+		PointData pointData = MyWeatherAPI.getPointData(47.62350, -122.33290);
+		if (forecast == null){
+			throw new RuntimeException("Forecast did not load");
+		}
+		temperature = new TextField();
+		weather = new TextField();
+		temperature.setText("Today's weather is: "+String.valueOf(forecast.get(0).temperature));
+		weather.setText(forecast.get(0).shortForecast);
+		if (pointData == null){
+			throw new RuntimeException("Point Data did not load");
+		}
+		gridX = new TextField();
+		gridY = new TextField();
+		gridX.setText(String.valueOf(pointData.gridX));
+		gridY.setText(String.valueOf(pointData.gridY));
+		location = new TextField();
+		locationName = String.valueOf(pointData.relativeLocation.properties.city) + ", " + String.valueOf(pointData.relativeLocation.properties.state);
+		location.setText(locationName);
+
 
 //		Load the icon before loading screens
 		IconLoader.preload();

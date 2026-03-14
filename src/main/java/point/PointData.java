@@ -9,4 +9,5 @@ public class PointData {
     public int gridY;
     public String forecast;
     public String forecastHourly;
+    public RelativeLocation relativeLocation;
 }
