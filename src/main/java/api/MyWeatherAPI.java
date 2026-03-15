@@ -11,6 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
+@SuppressWarnings("DefaultPackage")
 public class MyWeatherAPI extends WeatherAPI {
     public static ArrayList<HourlyPeriod> getHourlyForecast(String region, int gridx, int gridy){
         HttpRequest request = HttpRequest.newBuilder()
@@ -21,6 +22,10 @@ public class MyWeatherAPI extends WeatherAPI {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(response == null){
+            System.err.println("Failed to get response");
+            return null;
         }
         HourlyRoot r = getHourlyObject(response.body());
         if(r == null){
@@ -49,6 +54,10 @@ public class MyWeatherAPI extends WeatherAPI {
             response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(response == null){
+            System.err.println("Failed to get response");
+            return null;
         }
         PointRoot r = getPointObject(response.body());
         if(r == null){
