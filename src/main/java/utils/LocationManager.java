@@ -16,8 +16,6 @@ public class LocationManager {
         locationNames = FXCollections.observableArrayList();
         locations = FXCollections.observableArrayList();
         initDefaultLocation();
-        locationNames.add("New York, NY");
-        locationNames.add("Los Angeles, CA");
     }
 
     public static LocationManager getInstance() {
