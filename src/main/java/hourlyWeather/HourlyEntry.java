@@ -32,7 +32,7 @@ public class HourlyEntry {
         // Format wind: "12 mph NW"
         this.wind = period.windSpeed;
 
-        // Extract precipitation probability
+        // Extract precip probability
         this.precip = formatPrecipitation(period.probabilityOfPrecipitation);
     }
 

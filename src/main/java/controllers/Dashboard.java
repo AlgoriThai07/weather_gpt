@@ -1,12 +1,387 @@
 package controllers;
 
+import hourlyWeather.HourlyPeriod;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import point.PointData;
+import utils.IconLoader;
+import hourlyWeather.HourlyEntry;
+import utils.LocationManager;
+import weather.Period;
+
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.ResourceBundle;
 
-public class Dashboard implements Initializable {
-    @Override
-    public void initialize(URL location, ResourceBundle resources){
+import static javafx.collections.FXCollections.observableArrayList;
+import static utils.Parser.*;
 
+public class Dashboard implements Initializable {
+
+//    Top bar
+    @FXML private ImageView appLogo;
+    @FXML private ComboBox<String> locationComboBox;
+
+//    Hero Panel
+    @FXML private ImageView locationPin;
+    @FXML private ImageView conditionIcon;
+    @FXML private Label locationLabel;
+    @FXML private Label tempLabel;
+    @FXML private Label conditionLabel;
+    @FXML private Label dateLabel;
+
+//    Condition strip
+    @FXML private ImageView feelsLikeIcon;
+    @FXML private ImageView windIcon;
+    @FXML private ImageView precipitationIcon;
+    @FXML private ImageView humidityIcon;
+    @FXML private ImageView dewpointIcon;
+
+    @FXML private Label feelsLikeValue;
+    @FXML private Label windValue;
+    @FXML private Label precipitationValue;
+    @FXML private Label humidityValue;
+    @FXML private Label dewpointValue;
+
+//    Overview
+    @FXML private Label overviewText;
+
+//    24 hour forecast
+    @FXML private TableView<HourlyEntry> hourlyTable;
+    @FXML private TableColumn<HourlyEntry, String> colTime;
+    @FXML private TableColumn<HourlyEntry, String> colIcon;
+    @FXML private TableColumn<HourlyEntry, Integer> colTemp;
+    @FXML private TableColumn<HourlyEntry, Integer> colFeelsLike;
+    @FXML private TableColumn<HourlyEntry, String> colCondition;
+    @FXML private TableColumn<HourlyEntry, String> colWind;
+    @FXML private TableColumn<HourlyEntry, String> colPrecip;
+
+//    Status bar
+    @FXML private Label statusBarLabel;
+
+//    Internal State
+    private ArrayList<HourlyPeriod> hourlyData;
+    private PointData currentPointData;
+    private ArrayList<Period> forecastData;
+
+//    Initialize
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        loadStaticIcons();
+        setupLocationComboBox();
+        setupTableColumns();
+        loadDefaultLocation();
+    }
+
+//    Load the static icons
+    private void loadStaticIcons() {
+//        Top bar
+        setImage(appLogo, IconLoader.getIcon(IconLoader.APP_LOGO));
+        setImage(locationPin, IconLoader.getIcon(IconLoader.LOCATION_PIN));
+
+//        Conditions strip
+        setImage(feelsLikeIcon, IconLoader.getIcon(IconLoader.FEELS_LIKE_ICON));
+        setImage(windIcon, IconLoader.getIcon(IconLoader.WIND_ICON));
+        setImage(precipitationIcon, IconLoader.getIcon(IconLoader.PRECIPITATION_ICON));
+        setImage(humidityIcon, IconLoader.getIcon(IconLoader.HUMIDITY_ICON));
+        setImage(dewpointIcon, IconLoader.getIcon(IconLoader.DEWPOINT_ICON));
+    }
+
+//    Setup the combo box
+    private void setupLocationComboBox() {
+        ObservableList<String> locationNames = LocationManager.getInstance().getLocationNames();
+        locationComboBox.setItems(locationNames);
+
+        if (!locationNames.isEmpty()){
+            locationComboBox.getSelectionModel().selectFirst();
+        }
+
+//        Listen for location changes
+        locationComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                onLocationChanged();
+            }
+        });
+    }
+
+//    Bind the columns to the table + setup cells
+    private void setupTableColumns() {
+//        Bind to the hourlyEntry class
+        colTemp.setCellValueFactory(new PropertyValueFactory<>("temperature"));
+        colFeelsLike.setCellValueFactory(new PropertyValueFactory<>("feelsLike"));
+        colCondition.setCellValueFactory(new PropertyValueFactory<>("condition"));
+        colWind.setCellValueFactory(new PropertyValueFactory<>("wind"));
+        colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+        colPrecip.setCellValueFactory(new PropertyValueFactory<>("precip"));
+        colIcon.setCellValueFactory(new PropertyValueFactory<>("condition"));
+
+//        Setup the icon to change based on the condition
+        colIcon.setCellFactory(col -> new TableCell<>() {
+            private final ImageView iv = new ImageView();
+            {
+                iv.setFitWidth(24);
+                iv.setFitHeight(24);
+                iv.setPreserveRatio(true);
+            }
+            @Override
+            protected void updateItem(String condition, boolean empty) {
+                super.updateItem(condition, empty);
+                if (empty || condition == null) {
+                    setGraphic(null);
+                } else {
+                    iv.setImage(IconLoader.getConditionIcon(condition));
+                    setGraphic(iv);
+                }
+                setText(null);
+            }
+        });
+
+//        Setup a mini process bar for precip
+        colPrecip.setCellFactory(col -> new TableCell<>() {
+            private final Label valueLabel = new Label();
+            private final ImageView icon = new ImageView();
+            {
+                icon.setFitWidth(16);
+                icon.setFitHeight(16);
+                icon.setPreserveRatio(true);
+                icon.setImage(IconLoader.getIcon(IconLoader.PRECIPITATION_ICON));
+            }
+            private final HBox labelBox = new HBox(4, valueLabel, icon);
+            private final ProgressBar bar = new ProgressBar(0);
+            private final VBox box = new VBox(4, labelBox, bar);
+            {
+                box.getStyleClass().add("precipCellBox");
+                labelBox.getStyleClass().add("precipLabelBox");
+                bar.getStyleClass().add("precipBar");
+                valueLabel.getStyleClass().add("precipValueLabel");
+                VBox.setVgrow(box, Priority.ALWAYS);
+                bar.setPrefWidth(50);
+                bar.setPrefHeight(8);
+            }
+            @Override
+            protected void updateItem(String precip, boolean empty) {
+                super.updateItem(precip, empty);
+                if (empty || precip == null) {
+                    setGraphic(null);
+                } else {
+                    double pct = parsePrecip(precip);
+                    valueLabel.setText(precip);
+                    valueLabel.getStyleClass().add("cellPrecipLabel");
+                    bar.setProgress(pct);
+                    bar.getStyleClass().removeAll("precipBarEx", "precipBarHigh", "precipBarMed", "precipBarLow");
+                    if (pct >= 0.8){
+                        bar.getStyleClass().add("precipBarEx");
+                    } else if (pct >= 0.5){
+                        bar.getStyleClass().add("precipBarHigh");
+                    } else if (pct >= 0.25){
+                        bar.getStyleClass().add("precipBarMed");
+                    } else{
+                        bar.getStyleClass().add("precipBarLow");
+                    }
+                    setGraphic(box);
+                }
+                setText(null);
+            }
+        });
+
+//        Format and setup temperature column
+        colTemp.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Integer temp, boolean empty) {
+                super.updateItem(temp, empty);
+                setText(empty || temp == null ? null : temp + "°");
+                getStyleClass().add("cellTempLabel");
+            }
+        });
+
+//        Format and setup feels like column
+        colFeelsLike.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Integer fl, boolean empty) {
+                super.updateItem(fl, empty);
+                setText(empty || fl == null ? null : fl + "°");
+                getStyleClass().add("cellFeelsLikeLabel");
+            }
+        });
+
+//        Set width proportions for table columns for responsiveness
+        double[] columnProportions = {80, 50, 70, 70, 130, 90, 120};
+        double totalProportion = Arrays.stream(columnProportions).sum();
+
+        hourlyTable.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double tableWidth = newVal.doubleValue();
+            colTime.setPrefWidth((columnProportions[0] / totalProportion) * tableWidth);
+            colIcon.setPrefWidth((columnProportions[1] / totalProportion) * tableWidth);
+            colTemp.setPrefWidth((columnProportions[2] / totalProportion) * tableWidth);
+            colFeelsLike.setPrefWidth((columnProportions[3] / totalProportion) * tableWidth);
+            colCondition.setPrefWidth((columnProportions[4] / totalProportion) * tableWidth);
+            colWind.setPrefWidth((columnProportions[5] / totalProportion) * tableWidth);
+            colPrecip.setPrefWidth((columnProportions[6] / totalProportion) * tableWidth);
+        });
+
+    }
+
+//    Load data for the selected location
+
+    private void loadDefaultLocation() {
+        String first = locationComboBox.getSelectionModel().getSelectedItem();
+        if (first != null) {
+            updateDashboard(first);
+        }
+    }
+    @FXML
+    public void onLocationChanged() {
+        String selected = locationComboBox.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            updateDashboard(selected);
+        }
+    }
+
+//    Call apis from MyWeatherApi
+//    Update the UI based on the selected location
+    private void updateDashboard(String locationName) {
+//        Run api calls on background thread to avoid blocking UI
+        new Thread(() -> {
+            try {
+//                Get the PointData from LocationManager
+                PointData pointData = LocationManager.getInstance().getCurrentLocation(locationName);
+                if (pointData == null) {
+                    showError("Location data not found");
+                    return;
+                }
+
+                currentPointData = pointData;
+
+//                Fetch hourly forecast from the stored API route
+                hourlyData = api.MyWeatherAPI.getHourlyForecastFromURL(pointData.forecastHourly);
+                if (hourlyData == null || hourlyData.isEmpty()) {
+                    showError("Failed to fetch hourly forecast");
+                    return;
+                }
+
+//                Fetch forecast from the stored API route
+                forecastData = api.MyWeatherAPI.getForecastFromURL(pointData.forecast);
+                if (forecastData == null || forecastData.isEmpty()) {
+                    showError("Failed to fetch forecast");
+                    return;
+                }
+
+//                Update UI on FX thread
+                Platform.runLater(() -> populateDashboardUI(locationName));
+            } catch (Exception e) {
+                e.printStackTrace();
+                showError("Error loading weather data: " + e.getMessage());
+            }
+        }).start();
+    }
+
+//    Populate all UI components with fetched data
+    private void populateDashboardUI(String locationName) {
+        if (currentPointData == null || hourlyData == null || hourlyData.isEmpty() || forecastData == null || forecastData.isEmpty()) {
+            return;
+        }
+
+        HourlyPeriod firstHour = hourlyData.get(0);
+        Period forecast = forecastData.get(0);
+
+//        Hero Panel
+        String city = currentPointData.relativeLocation.properties.city;
+        String state = currentPointData.relativeLocation.properties.state;
+        locationLabel.setText(city.toUpperCase() + ", " + state);
+        tempLabel.setText(String.valueOf(firstHour.temperature));
+        conditionLabel.setText(firstHour.shortForecast);
+        dateLabel.setText(formatDateTime());
+        setImage(conditionIcon, IconLoader.getConditionIcon(extractCondition(firstHour.shortForecast)));
+
+//        Condition Strip
+        double humidity = (firstHour.relativeHumidity != null) ? firstHour.relativeHumidity.value : 50.0;
+        double windSpeed = parseWindSpeed(firstHour.windSpeed);
+        int feelsLikeTemp = (int) Math.round(
+                utils.FeelsLikeCalculator.calculateFeelsLike(firstHour.temperature, humidity, windSpeed)
+        );
+
+        feelsLikeValue.setText(feelsLikeTemp + "°F");
+        windValue.setText(firstHour.windSpeed);
+        precipitationValue.setText(formatPrecipitation(firstHour.probabilityOfPrecipitation));
+        humidityValue.setText((int) humidity + "%");
+        dewpointValue.setText((int) firstHour.dewpoint.value + "°F");
+
+//        Overview Text
+        overviewText.setText(forecast.detailedForecast);
+
+//        24 hour forecast
+        ArrayList<HourlyEntry> hourlyEntries = new ArrayList<>();
+        for (int i = 0; i < hourlyData.size(); i++) {
+            hourlyEntries.add(new HourlyEntry(hourlyData.get(i)));
+        }
+        hourlyTable.setItems(observableArrayList(hourlyEntries));
+
+//        Status bar
+        String lastUpdated = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a").format(new Date());
+        statusBarLabel.setText("NWS API — Last updated: " + lastUpdated + "  ·  " + city + ", " + state);
+    }
+
+//    Navigation handlers for switching to different scenes
+
+    @FXML
+    private void handleNavigateForecast() {
+        switchScene("Forecast");
+    }
+
+    @FXML
+    private void handleNavigateAssistant() {
+        switchScene("Assistant");
+    }
+
+    @FXML
+    private void handleNavigateLocations() {
+        switchScene("ManageLocations");
+    }
+
+    private void switchScene(String fxmlName) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/" + fxmlName + ".fxml"));
+            Parent root = loader.load();
+            locationComboBox.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load scene: " + fxmlName);
+        }
+    }
+
+//    private helper functions
+//    Set imageview null safe
+    private void setImage(ImageView view, Image image) {
+        if (view != null) view.setImage(image);
+    }
+
+//    Return a normalize precipitation (0.0 - 1.0) for the progress bar
+    private double parsePrecip(String precip) {
+        try {
+            return Integer.parseInt(precip.replace("%", "")) / 100.0;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+//    Show error messages in the status bar
+    private void showError(String message) {
+        Platform.runLater(() -> statusBarLabel.setText("Error: " + message));
     }
 }

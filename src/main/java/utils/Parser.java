@@ -3,6 +3,7 @@ package utils;
 import weather.ProbabilityOfPrecipitation;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Parser {
     private Parser() {}
@@ -23,6 +24,11 @@ public class Parser {
         if (date == null) return "";
         SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
         return sdf.format(date);
+    }
+
+    public static String formatDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
+        return sdf.format(new Date());
     }
 
 //  Transform the windspeed from string to a double value

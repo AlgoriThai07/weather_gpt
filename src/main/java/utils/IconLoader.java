@@ -17,7 +17,7 @@ public final class IconLoader {
     public static final String LOCATION_PIN         = "location-pin.png";
     public static final String FEELS_LIKE_ICON   = "feels-like.png";
     public static final String DEWPOINT_ICON = "dewpoint.png";
-    public static final String WIND                 = "wind.png";
+    public static final String WIND_ICON = "wind.png";
     public static final String PRECIPITATION_ICON        = "precipitation.png";
     public static final String HUMIDITY_ICON = "humidity.png";
 
@@ -64,7 +64,7 @@ public final class IconLoader {
         getIcon(LOCATION_PIN);
         getIcon(FEELS_LIKE_ICON);
         getIcon(DEWPOINT_ICON);
-        getIcon(WIND);
+        getIcon(WIND_ICON);
         getIcon(PRECIPITATION_ICON);
         getIcon(HUMIDITY_ICON);
 

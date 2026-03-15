@@ -1,3 +1,5 @@
+package api;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hourlyWeather.HourlyPeriod;
 import hourlyWeather.HourlyRoot;
@@ -32,7 +34,12 @@ public class MyWeatherAPI extends WeatherAPI {
             System.err.println("Failed to parse JSon");
             return null;
         }
-        return r.properties.periods;
+        ArrayList<HourlyPeriod> allPeriods = r.properties.periods;
+        ArrayList<HourlyPeriod> limitedPeriods = new ArrayList<>();
+        for (int i = 0; i < Math.min(24, allPeriods.size()); i++) {
+            limitedPeriods.add(allPeriods.get(i));
+        }
+        return limitedPeriods;
     }
     public static HourlyRoot getHourlyObject(String json){
         ObjectMapper om = new ObjectMapper();
@@ -76,5 +83,54 @@ public class MyWeatherAPI extends WeatherAPI {
             e.printStackTrace();
         }
         return toRet;
+    }
+    public static ArrayList<Period> getForecastFromURL(String url){
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("User-Agent", "MyWeatherApp/1.0 (thaiviet0703@gmail.com)")
+                .build();
+        HttpResponse<String> response = null;
+        try {
+            response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(response == null){
+            System.err.println("Failed to get response");
+            return null;
+        }
+        Root r = getObject(response.body());
+        if(r == null){
+            System.err.println("Failed to parse JSon");
+            return null;
+        }
+        return r.properties.periods;
+    }
+    public static ArrayList<HourlyPeriod> getHourlyForecastFromURL(String url){
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("User-Agent", "MyWeatherApp/1.0 (thaiviet0703@gmail.com)")
+                .build();
+        HttpResponse<String> response = null;
+        try {
+            response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(response == null){
+            System.err.println("Failed to get response");
+            return null;
+        }
+        HourlyRoot r = getHourlyObject(response.body());
+        if(r == null){
+            System.err.println("Failed to parse JSon");
+            return null;
+        }
+        ArrayList<HourlyPeriod> allPeriods = r.properties.periods;
+        ArrayList<HourlyPeriod> limitedPeriods = new ArrayList<>();
+        for (int i = 0; i < Math.min(24, allPeriods.size()); i++) {
+            limitedPeriods.add(allPeriods.get(i));
+        }
+        return limitedPeriods;
     }
 }

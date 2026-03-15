@@ -29,7 +29,7 @@
         <Region HBox.hgrow="ALWAYS"/>
         <HBox alignment="CENTER" spacing="8">
             <Label text="Location:" styleClass="title"/>
-            <ComboBox fx:id="locationComboBox" prefWidth="170" styleClass="comboBox" />
+            <ComboBox fx:id="locationComboBox" prefWidth="160" styleClass="comboBox" onAction="#onLocationChanged"/>
         </HBox>
     </HBox>
 
@@ -65,7 +65,7 @@
                     </VBox>
                 </HBox>
             </VBox>
-<!--            Grid Pane-->
+<!--            Condition Strip-->
             <GridPane maxWidth="Infinity" styleClass="conditions">
                 <columnConstraints>
                     <ColumnConstraints halignment="CENTER" percentWidth="20"/>
@@ -149,15 +149,15 @@
                     <Label text="24-HOUR FORECAST" styleClass="label"/>
                 </HBox>
 <!--                Table: Hourly Data-->
-                <TableView fx:id="hourlyTable" styleClass="hourlyTable" prefHeight="340" maxHeight="340" VBox.vgrow="NEVER" fixedCellSize="56" editable="false">
+                <TableView fx:id="hourlyTable" styleClass="hourlyTable" prefHeight="350" VBox.vgrow="NEVER" fixedCellSize="56" editable="false">
                     <columns>
-                        <TableColumn fx:id="colTime" text="TIME" prefWidth="100" minWidth="90" maxWidth="110" styleClass="colTime" sortable="false" resizable="false"/>
-                        <TableColumn fx:id="colIcon" text="" prefWidth="50" minWidth="50" maxWidth="50" styleClass="colIcon" sortable="false" resizable="false"/>
-                        <TableColumn fx:id="colTemp" text="TEMP" prefWidth="100" minWidth="80" maxWidth="110" styleClass="colTemp" sortable="false" resizable="false"/>
-                        <TableColumn fx:id="colFeelsLike" text="FEELS LIKE" prefWidth="100" minWidth="80" maxWidth="110" styleClass="colFeelsLike" sortable="false" resizable="false"/>
-                        <TableColumn fx:id="colCondition" text="CONDITION" prefWidth="100" minWidth="80" maxWidth="110" styleClass="colCondition" sortable="false" resizable="false"/>
-                        <TableColumn fx:id="colWind" text="WIND SPEED" prefWidth="140" minWidth="120" styleClass="colWind" sortable="false"/>
-                        <TableColumn fx:id="colPrecip" text="PRECIP %" prefWidth="80" minWidth="70" maxWidth="100" styleClass="colPrecip" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colTime" text="TIME" styleClass="colTime" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colIcon" text="" styleClass="colIcon" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colTemp" text="TEMP" styleClass="colTemp" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colFeelsLike" text="FEELS LIKE" styleClass="colFeelsLike" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colCondition" text="CONDITION" styleClass="colCondition" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colWind" text="WIND SPEED" styleClass="colWind" sortable="false"/>
+                        <TableColumn fx:id="colPrecip" text="PRECIP %" styleClass="colPrecip" sortable="false" resizable="false"/>
                     </columns>
                     <placeholder>
                         <Label text="No forecast data available." styleClass="placeholder"/>
@@ -169,9 +169,9 @@
                 <padding>
                     <Insets top="14" right="24" bottom="14" left="24"/>
                 </padding>
-                <Button text="3-Day Forecast" styleClass="button"/>
-                <Button text="Weather Assistant" styleClass="button"/>
-                <Button text="Manage Locations" styleClass="button"/>
+                <Button text="3-Day Forecast" styleClass="button" onAction="#handleNavigateForecast"/>
+                <Button text="Weather Assistant" styleClass="button" onAction="#handleNavigateAssistant"/>
+                <Button text="Manage Locations" styleClass="button" onAction="#handleNavigateLocations"/>
             </HBox>
         </VBox>
     </ScrollPane>
@@ -181,6 +181,6 @@
             <Insets top="6" left="20" bottom="6" right="20"/>
         </padding>
         <Circle radius="4" styleClass="statusDot"/>
-        <Label fx:id="label" text="NWS API — Last updated: Today, 2:00 PM  ·  Chicago (Lat: 41.87, Lon: −87.62)" styleClass="label"/>
+        <Label fx:id="statusBarLabel" text="NWS API — Last updated: Today, 2:00 PM  ·  Chicago" styleClass="label"/>
     </HBox>
 </VBox>
