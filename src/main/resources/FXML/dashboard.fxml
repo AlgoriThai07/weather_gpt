@@ -6,10 +6,181 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.Dashboard"
-            prefHeight="400.0" prefWidth="600.0">
-    <Button text="Press Here"/>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Circle?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.Dashboard"
+      prefHeight="650.0" prefWidth="800.0"
+      fx:id="root"
+      stylesheets="/styles/dashboard.css">
 
-</AnchorPane>
+    <!--Top bar -->
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="topBar">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <StackPane styleClass="iconWrap">
+                <ImageView fx:id="appLogo" fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true"/>
+            </StackPane>
+        </HBox>
+        <Label text="WeatherGPT" styleClass="title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox alignment="CENTER" spacing="8">
+            <Label text="Location:" styleClass="title"/>
+            <ComboBox fx:id="locationComboBox" prefWidth="160" styleClass="comboBox" onAction="#onLocationChanged"/>
+        </HBox>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" styleClass="scrollPane" VBox.vgrow="ALWAYS" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+        <VBox styleClass="body">
+<!--            Hero Panel-->
+            <VBox alignment="CENTER_LEFT" minHeight="190" styleClass="heroPanel">
+                <padding><Insets bottom="24" left="32" top="24" right="32"/></padding>
+                <HBox alignment="CENTER_LEFT">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="6">
+                            <ImageView fx:id="locationPin" fitHeight="14" fitWidth="14" preserveRatio="true"/>
+                            <Label fx:id="locationLabel" styleClass="location" text="Chicago, IL"/>
+                        </HBox>
+                        <HBox alignment="BOTTOM_LEFT">
+                            <Label fx:id="tempLabel" styleClass="temp" text="67"/>
+                            <VBox alignment="TOP_LEFT">
+                                <padding>
+                                    <Insets top="14" left="4"/>
+                                </padding>
+                                <Label styleClass="unit" text="°F"/>
+                            </VBox>
+                        </HBox>
+                        <Label fx:id="conditionLabel" styleClass="condition" text="Sunny"/>
+                        <Label fx:id="dateLabel" styleClass="date" text="Saturday, October 17 · 12:00 AM">
+                            <VBox.margin>
+                                <Insets top="4"/>
+                            </VBox.margin>
+                        </Label>
+                    </VBox>
+                    <VBox alignment="CENTER">
+                        <ImageView fx:id="conditionIcon" fitHeight="100" fitWidth="100" preserveRatio="true"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+<!--            Condition Strip-->
+            <GridPane maxWidth="Infinity" styleClass="conditions">
+                <columnConstraints>
+                    <ColumnConstraints halignment="CENTER" percentWidth="20"/>
+                    <ColumnConstraints halignment="CENTER" percentWidth="20"/>
+                    <ColumnConstraints halignment="CENTER" percentWidth="20"/>
+                    <ColumnConstraints halignment="CENTER" percentWidth="20"/>
+                    <ColumnConstraints halignment="CENTER" percentWidth="20"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="ALWAYS"/>
+                </rowConstraints>
+<!--                Feels Like-->
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" alignment="CENTER" spacing="4" styleClass="cell">
+                    <padding>
+                        <Insets top="16" right="12" bottom="16" left="12"/>
+                    </padding>
+                    <ImageView fx:id="feelsLikeIcon" fitWidth="16" fitHeight="16" preserveRatio="true"/>
+                    <Label text="FEELS LIKE" styleClass="metricLabel"/>
+                    <Label fx:id="feelsLikeValue" text="67°F" styleClass="valueLabel"/>
+                </VBox>
+<!--                Wind-->
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="1" alignment="CENTER" spacing="4" styleClass="cell">
+                    <padding>
+                        <Insets top="16" right="12" bottom="16" left="12"/>
+                    </padding>
+                    <ImageView fx:id="windIcon" fitWidth="16" fitHeight="16" preserveRatio="true"/>
+                    <Label text="WIND" styleClass="metricLabel"/>
+                    <Label fx:id="windValue" text="12 mph NW" styleClass="valueLabel"/>
+                </VBox>
+<!--                Precipitation-->
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="2" alignment="CENTER" spacing="4" styleClass="cell">
+                    <padding>
+                        <Insets top="16" right="12" bottom="16" left="12"/>
+                    </padding>
+                    <ImageView fx:id="precipitationIcon" fitWidth="16" fitHeight="16" preserveRatio="true"/>
+                    <Label text="PRECIPITATION" styleClass="metricLabel"/>
+                    <Label fx:id="precipitationValue" text="20%" styleClass="valueLabel"/>
+                </VBox>
+<!--                    Humidity-->
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="3" alignment="CENTER" spacing="4" styleClass="cell">
+                    <padding>
+                        <Insets top="16" right="12" bottom="16" left="12"/>
+                    </padding>
+                    <ImageView fx:id="humidityIcon" fitWidth="16" fitHeight="16" preserveRatio="true"/>
+                    <Label text="HUMIDITY" styleClass="metricLabel"/>
+                    <Label fx:id="humidityValue" text="72%" styleClass="valueLabel"/>
+                </VBox>
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="4" alignment="CENTER" spacing="4" styleClass="cell">
+                    <padding>
+                        <Insets top="16" right="12" bottom="16" left="12"/>
+                    </padding>
+                    <ImageView fx:id="dewpointIcon" fitWidth="16" fitHeight="16" preserveRatio="true"/>
+                    <Label text="DEWPOINT" styleClass="metricLabel"/>
+                    <Label fx:id="dewpointValue" text="28°F" styleClass="valueLabel"/>
+                </VBox>
+            </GridPane>
+<!--            Overview-->
+            <VBox styleClass="overview">
+                <padding>
+                    <Insets top="14" right="24" bottom="14" left="24"/>
+                </padding>
+<!--                Header-->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Region prefWidth="4" prefHeight="16" styleClass="accentBar"/>
+                    <Label text="TODAY'S OVERVIEW" styleClass="label"/>
+                </HBox>
+<!--                Body-->
+                <Label fx:id="overviewText" wrapText="true" styleClass="body" text="Cool and windy today. Rain is expected after 5 PM with temperatures staying in the mid-to-upper 30s. Winds will be out of the northeast at 15–25 mph. Wear a light jacket and bring an umbrella for the afternoon and evening hours.">
+                    <VBox.margin>
+                        <Insets top="8"/>
+                    </VBox.margin>
+                </Label>
+            </VBox>
+<!--            24 hour forecast-->
+            <VBox styleClass="forecast">
+                <HBox styleClass="header" alignment="CENTER_LEFT" spacing="8">
+                    <padding>
+                        <Insets top="8" right="24" bottom="8" left="24"/>
+                    </padding>
+                    <Region prefHeight="16" prefWidth="4" styleClass="accentBar"/>
+                    <Label text="24-HOUR FORECAST" styleClass="label"/>
+                </HBox>
+<!--                Table: Hourly Data-->
+                <TableView fx:id="hourlyTable" styleClass="hourlyTable" prefHeight="350" VBox.vgrow="NEVER" fixedCellSize="56" editable="false">
+                    <columns>
+                        <TableColumn fx:id="colTime" text="TIME" styleClass="colTime" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colIcon" text="" styleClass="colIcon" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colTemp" text="TEMP" styleClass="colTemp" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colFeelsLike" text="FEELS LIKE" styleClass="colFeelsLike" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colCondition" text="CONDITION" styleClass="colCondition" sortable="false" resizable="false"/>
+                        <TableColumn fx:id="colWind" text="WIND SPEED" styleClass="colWind" sortable="false"/>
+                        <TableColumn fx:id="colPrecip" text="PRECIP %" styleClass="colPrecip" sortable="false" resizable="false"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No forecast data available." styleClass="placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+<!--            Navigation buttons-->
+            <HBox styleClass="navBar" alignment="CENTER_LEFT" spacing="12">
+                <padding>
+                    <Insets top="14" right="24" bottom="14" left="24"/>
+                </padding>
+                <Button text="3-Day Forecast" styleClass="button" onAction="#handleNavigateForecast"/>
+                <Button text="Weather Assistant" styleClass="button" onAction="#handleNavigateAssistant"/>
+                <Button text="Manage Locations" styleClass="button" onAction="#handleNavigateLocations"/>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+<!--    Status Bar-->
+    <HBox styleClass="statusBar" alignment="CENTER_LEFT" spacing="8">
+        <padding>
+            <Insets top="6" left="20" bottom="6" right="20"/>
+        </padding>
+        <Circle radius="4" styleClass="statusDot"/>
+        <Label fx:id="statusBarLabel" text="NWS API — Last updated: Today, 2:00 PM  ·  Chicago" styleClass="label"/>
+    </HBox>
+</VBox>
