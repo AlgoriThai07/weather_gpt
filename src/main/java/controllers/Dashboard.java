@@ -1,5 +1,7 @@
 package controllers;
 
+import api.CachedWeatherApiProxy;
+import api.WeatherApiService;
 import hourlyWeather.HourlyPeriod;
 import hourlyWeather.WeatherTableEntry;
 import javafx.application.Platform;
@@ -78,6 +80,9 @@ public class Dashboard implements Initializable {
     private ArrayList<HourlyPeriod> hourlyData;
     private PointData currentPointData;
     private ArrayList<Period> forecastData;
+
+//    Proxy
+    private final WeatherApiService weatherApi = new CachedWeatherApiProxy(new api.MyWeatherAPI());
 
 //    Initialize
     @Override
@@ -268,14 +273,14 @@ public class Dashboard implements Initializable {
                 currentPointData = pointData;
 
 //                Fetch hourly forecast from the stored API route
-                hourlyData = api.MyWeatherAPI.getHourlyForecastFromURL(pointData.forecastHourly);
+                hourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
                 if (hourlyData == null || hourlyData.isEmpty()) {
                     showError("Failed to fetch hourly forecast");
                     return;
                 }
 
 //                Fetch forecast from the stored API route
-                forecastData = api.MyWeatherAPI.getForecastFromURL(pointData.forecast);
+                forecastData = weatherApi.getForecastFromURL(pointData.forecast);
                 if (forecastData == null || forecastData.isEmpty()) {
                     showError("Failed to fetch forecast");
                     return;
