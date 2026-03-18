@@ -21,6 +21,8 @@ import point.PointData;
 import utils.IconLoader;
 import hourlyWeather.HourlyEntryAdapter;
 import utils.LocationManager;
+import utils.ShowError;
+import utils.SwitchScene;
 import weather.Period;
 
 import java.net.URL;
@@ -32,6 +34,8 @@ import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static utils.Parser.*;
+import static utils.ShowError.showError;
+import static utils.SwitchScene.switchScene;
 
 public class Dashboard implements Initializable {
 
@@ -87,6 +91,7 @@ public class Dashboard implements Initializable {
 //    Initialize
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        ShowError.setStatusBarLabel(statusBarLabel);
         loadStaticIcons();
         setupLocationComboBox();
         setupTableColumns();
@@ -351,23 +356,12 @@ public class Dashboard implements Initializable {
 
     @FXML
     private void handleNavigateAssistant() {
-        switchScene("Assistant");
+        switchScene("weatherAssistant");
     }
 
     @FXML
     private void handleNavigateLocations() {
         switchScene("ManageLocations");
-    }
-
-    private void switchScene(String fxmlName) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/" + fxmlName + ".fxml"));
-            Parent root = loader.load();
-            locationComboBox.getScene().setRoot(root);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showError("Failed to load scene: " + fxmlName);
-        }
     }
 
 //    private helper functions
@@ -383,10 +377,5 @@ public class Dashboard implements Initializable {
         } catch (NumberFormatException e) {
             return 0.0;
         }
-    }
-
-//    Show error messages in the status bar
-    private void showError(String message) {
-        Platform.runLater(() -> statusBarLabel.setText("Error: " + message));
     }
 }

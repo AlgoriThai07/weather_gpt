@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import utils.IconLoader;
+import utils.SwitchScene;
 import weather.Period;
 import point.PointData;
 
@@ -57,6 +58,9 @@ public class JavaFX extends Application {
 		Parent dashboardRoot = dashboardLoader.load();
 
 		Scene dashboardScene = new Scene(dashboardRoot, 700,700);
+
+		SwitchScene.setCurrentScene(dashboardScene);
+		SwitchScene.setPrimaryStage(primaryStage);
 				
 //		Scene scene = new Scene(new VBox(temperature,weather,gridX,gridY), 700,700);
 		primaryStage.setTitle("WeatherGPT");
