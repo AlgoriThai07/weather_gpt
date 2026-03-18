@@ -37,7 +37,9 @@ public class CachedWeatherApiProxy implements WeatherApiService{
 //        Else fetch data from Api and also add to the cache
         System.out.println("Fetching fresh PointData from API for: " + key);
         PointData freshData = realApi.getPointData(lat, lon);
-        pointDataCache.put(key, new CacheEntry<>(freshData, System.currentTimeMillis()));
+        if (freshData != null){
+            pointDataCache.put(key, new CacheEntry<>(freshData, System.currentTimeMillis()));
+        }
         return freshData;
     }
 
@@ -52,14 +54,16 @@ public class CachedWeatherApiProxy implements WeatherApiService{
 //        Else fetch data from Api and also add to the cache
         System.out.println("Fetching fresh forecast from API for: " + url);
         ArrayList<Period> freshData = realApi.getForecastFromURL(url);
-        forecastCache.put(url, new CacheEntry<>(freshData, System.currentTimeMillis()));
+        if (freshData != null){
+            forecastCache.put(url, new CacheEntry<>(freshData, System.currentTimeMillis()));
+        }
         return freshData;
     }
 
     @Override
     public ArrayList<HourlyPeriod> getHourlyForecastFromURL(String url){
 //        If the cache is valid, return data
-        if (isCacheValid(forecastCache, url)){
+        if (isCacheValid(hourlyCache, url)){
             System.out.println("Return cached hourly forecast for: " + url);
             return  hourlyCache.get(url).data;
         }
@@ -67,7 +71,9 @@ public class CachedWeatherApiProxy implements WeatherApiService{
 //        Else fetch data from Api and also add to the cache
         System.out.println("Fetching fresh hourly forecast from API for: " + url);
         ArrayList<HourlyPeriod> freshData = realApi.getHourlyForecastFromURL(url);
-        hourlyCache.put(url, new CacheEntry<>(freshData, System.currentTimeMillis()));
+        if (freshData != null){
+            hourlyCache.put(url, new CacheEntry<>(freshData, System.currentTimeMillis()));
+        }
         return freshData;
     }
 
