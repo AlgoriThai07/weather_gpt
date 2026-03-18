@@ -14,7 +14,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
 @SuppressWarnings("DefaultPackage")
-public class MyWeatherAPI extends WeatherAPI {
+public class MyWeatherAPI extends WeatherAPI implements WeatherApiService{
     public static ArrayList<HourlyPeriod> getHourlyForecast(String region, int gridx, int gridy){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.weather.gov/gridpoints/"+region+"/"+String.valueOf(gridx)+","+String.valueOf(gridy)+"/forecast/hourly"))
@@ -51,7 +51,9 @@ public class MyWeatherAPI extends WeatherAPI {
         }
         return toRet;
     }
-    public static PointData getPointData(double lat, double lon){
+
+    @Override
+    public PointData getPointData(double lat, double lon){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.weather.gov/points/"+String.valueOf(lat)+","+String.valueOf(lon)))
                 .header("User-Agent", "MyWeatherApp/1.0 (thaiviet0703@gmail.com)")
@@ -84,7 +86,8 @@ public class MyWeatherAPI extends WeatherAPI {
         }
         return toRet;
     }
-    public static ArrayList<Period> getForecastFromURL(String url){
+    @Override
+    public ArrayList<Period> getForecastFromURL(String url){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("User-Agent", "MyWeatherApp/1.0 (thaiviet0703@gmail.com)")
@@ -106,7 +109,8 @@ public class MyWeatherAPI extends WeatherAPI {
         }
         return r.properties.periods;
     }
-    public static ArrayList<HourlyPeriod> getHourlyForecastFromURL(String url){
+    @Override
+    public ArrayList<HourlyPeriod> getHourlyForecastFromURL(String url){
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("User-Agent", "MyWeatherApp/1.0 (thaiviet0703@gmail.com)")

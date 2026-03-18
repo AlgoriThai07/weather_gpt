@@ -4,8 +4,9 @@ import utils.FeelsLikeCalculator;
 
 import static utils.Parser.*;
 
-//Class for displaying in the 24h forecast
-public class HourlyEntry {
+//This is the Adapter class
+//It implements the WeatherTableEntry interface and wraps the Hourly Period class
+public class HourlyEntryAdapter implements WeatherTableEntry{
     private String time;
     private Integer temperature;
     private Integer feelsLike;
@@ -14,7 +15,7 @@ public class HourlyEntry {
     private String precip;
 
 //    Transform and format API data for the UI
-    public HourlyEntry(HourlyPeriod period) {
+    public HourlyEntryAdapter(HourlyPeriod period) {
 //        Format time as "3:00 PM"
         this.time = formatTime(period.startTime);
 
@@ -35,27 +36,32 @@ public class HourlyEntry {
         // Extract precip probability
         this.precip = formatPrecipitation(period.probabilityOfPrecipitation);
     }
-
+    @Override
     public String getTime() {
         return time;
     }
 
+    @Override
     public Integer getTemperature() {
         return temperature;
     }
 
+    @Override
     public Integer getFeelsLike() {
         return feelsLike;
     }
 
+    @Override
     public String getCondition() {
         return condition;
     }
 
+    @Override
     public String getWind() {
         return wind;
     }
 
+    @Override
     public String getPrecip() {
         return precip;
     }

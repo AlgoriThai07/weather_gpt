@@ -1,8 +1,10 @@
 package controllers;
 
+import api.CachedWeatherApiProxy;
+import api.WeatherApiService;
 import hourlyWeather.HourlyPeriod;
+import hourlyWeather.WeatherTableEntry;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +17,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import point.PointData;
 import utils.IconLoader;
-import hourlyWeather.HourlyEntry;
+import hourlyWeather.HourlyEntryAdapter;
 import utils.LocationManager;
 import weather.Period;
 
@@ -63,14 +64,14 @@ public class Dashboard implements Initializable {
     @FXML private Label overviewText;
 
 //    24 hour forecast
-    @FXML private TableView<HourlyEntry> hourlyTable;
-    @FXML private TableColumn<HourlyEntry, String> colTime;
-    @FXML private TableColumn<HourlyEntry, String> colIcon;
-    @FXML private TableColumn<HourlyEntry, Integer> colTemp;
-    @FXML private TableColumn<HourlyEntry, Integer> colFeelsLike;
-    @FXML private TableColumn<HourlyEntry, String> colCondition;
-    @FXML private TableColumn<HourlyEntry, String> colWind;
-    @FXML private TableColumn<HourlyEntry, String> colPrecip;
+    @FXML private TableView<WeatherTableEntry> hourlyTable;
+    @FXML private TableColumn<WeatherTableEntry, String> colTime;
+    @FXML private TableColumn<WeatherTableEntry, String> colIcon;
+    @FXML private TableColumn<WeatherTableEntry, Integer> colTemp;
+    @FXML private TableColumn<WeatherTableEntry, Integer> colFeelsLike;
+    @FXML private TableColumn<WeatherTableEntry, String> colCondition;
+    @FXML private TableColumn<WeatherTableEntry, String> colWind;
+    @FXML private TableColumn<WeatherTableEntry, String> colPrecip;
 
 //    Status bar
     @FXML private Label statusBarLabel;
@@ -79,6 +80,9 @@ public class Dashboard implements Initializable {
     private ArrayList<HourlyPeriod> hourlyData;
     private PointData currentPointData;
     private ArrayList<Period> forecastData;
+
+//    Proxy
+    private final WeatherApiService weatherApi = new CachedWeatherApiProxy(new api.MyWeatherAPI());
 
 //    Initialize
     @Override
@@ -120,7 +124,7 @@ public class Dashboard implements Initializable {
         });
     }
 
-//    Bind the columns to the table + setup cells
+//    Bind the columns to the table and setup cells
     private void setupTableColumns() {
 //        Bind to the hourlyEntry class
         colTemp.setCellValueFactory(new PropertyValueFactory<>("temperature"));
@@ -269,14 +273,14 @@ public class Dashboard implements Initializable {
                 currentPointData = pointData;
 
 //                Fetch hourly forecast from the stored API route
-                hourlyData = api.MyWeatherAPI.getHourlyForecastFromURL(pointData.forecastHourly);
+                hourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
                 if (hourlyData == null || hourlyData.isEmpty()) {
                     showError("Failed to fetch hourly forecast");
                     return;
                 }
 
 //                Fetch forecast from the stored API route
-                forecastData = api.MyWeatherAPI.getForecastFromURL(pointData.forecast);
+                forecastData = weatherApi.getForecastFromURL(pointData.forecast);
                 if (forecastData == null || forecastData.isEmpty()) {
                     showError("Failed to fetch forecast");
                     return;
@@ -326,9 +330,10 @@ public class Dashboard implements Initializable {
         overviewText.setText(forecast.detailedForecast);
 
 //        24 hour forecast
-        ArrayList<HourlyEntry> hourlyEntries = new ArrayList<>();
+        ArrayList<WeatherTableEntry> hourlyEntries = new ArrayList<>();
         for (int i = 0; i < hourlyData.size(); i++) {
-            hourlyEntries.add(new HourlyEntry(hourlyData.get(i)));
+//            Instantiate the Adapter and add it to the list
+            hourlyEntries.add(new HourlyEntryAdapter(hourlyData.get(i)));
         }
         hourlyTable.setItems(observableArrayList(hourlyEntries));
 
