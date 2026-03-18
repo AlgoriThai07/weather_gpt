@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.WeatherAssistant"
+      prefHeight="650.0" prefWidth="800.0"
+      fx:id="root"
+      stylesheets="/styles/weatherAssistant.css">
+
+<!--    Top bar-->
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="topBar">
+        <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <StackPane styleClass="iconWrap">
+                <ImageView fx:id="appLogo" fitHeight="20" fitWidth="20" pickOnBounds="true" preserveRatio="true"/>
+            </StackPane>
+        </HBox>
+        <Label text="WeatherGPT" styleClass="title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox alignment="CENTER" spacing="8">
+            <Label text="Location:" styleClass="title"/>
+            <ComboBox fx:id="locationComboBox" prefWidth="170" styleClass="comboBox"/>
+        </HBox>
+    </HBox>
+
+<!--    Chat area-->
+    <ScrollPane fx:id="chatScroll" fitToWidth="true" styleClass="chatScroll"
+                VBox.vgrow="ALWAYS" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+
+        <!--
+            chatContainer — controller injects HBox message rows here.
+            Static nodes below are the initial welcome state only.
+        -->
+        <VBox fx:id="chatContainer"
+              styleClass="chatContainer"
+              spacing="16">
+            <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+            <!-- ── Section divider: conversation start ── -->
+            <HBox alignment="CENTER" styleClass="dateDivider">
+                <Region HBox.hgrow="ALWAYS" styleClass="dividerLine"/>
+                <Label text="Today" styleClass="dividerLabel">
+                    <HBox.margin><Insets right="10" left="10"/></HBox.margin>
+                </Label>
+                <Region HBox.hgrow="ALWAYS" styleClass="dividerLine"/>
+            </HBox>
+
+            <!-- ── Welcome message (assistant) ── -->
+            <HBox styleClass="assistantRow" spacing="10" alignment="TOP_LEFT">
+
+                <!-- Avatar -->
+                <StackPane styleClass="avatarWrap"
+                           minWidth="36" minHeight="36"
+                           maxWidth="36" maxHeight="36">
+                    <ImageView fx:id="assistantAvatar"
+                               fitHeight="20" fitWidth="20"
+                               preserveRatio="true"/>
+                </StackPane>
+
+                <!-- Bubble -->
+                <VBox styleClass="assistantBubble" spacing="6">
+                    <!-- cap right margin so bubble never spans full width -->
+                    <HBox.margin><Insets right="120"/></HBox.margin>
+                    <Label text="WeatherGPT" styleClass="senderName"/>
+                    <Label styleClass="messageText"
+                           wrapText="true"
+                           text="Hi! I'm your AI-powered weather assistant. I can answer questions about current conditions, hourly or extended forecasts, precipitation chances, and help you plan around the weather. What would you like to know?"/>
+                    <Label text="2:00 PM" styleClass="timestamp"/>
+                </VBox>
+
+            </HBox>
+
+            <!-- ── Quick-reply suggestion chips ── -->
+            <!--
+                Left margin = avatarWrap width (36) + HBox spacing (10)
+                so chips align with the start of the bubble text above.
+            -->
+            <HBox styleClass="suggestionsRow" spacing="8" alignment="CENTER_LEFT">
+                <HBox.margin><Insets left="46"/></HBox.margin>
+                <Button text="Will it rain today?"
+                        styleClass="chipButton"/>
+                <Button text="This week's forecast?"
+                        styleClass="chipButton"/>
+                <Button text="What should I wear?"
+                        styleClass="chipButton"/>
+                <Button text="Current wind conditions?"
+                        styleClass="chipButton"/>
+            </HBox>
+
+            <!-- ════════════════════════════════════════════════════
+                 Dynamic message rows are injected here at runtime
+                 by WeatherAssistantController via:
+                     chatContainer.getChildren().add(row)
+
+                 User row template (RIGHT-aligned):
+                 ┌─ HBox styleClass="userRow" alignment="CENTER_RIGHT"
+                 │   └─ VBox styleClass="userBubble" spacing="4"
+                 │       ├─ Label styleClass="messageText" wrapText="true"
+                 │       └─ Label styleClass="timestamp"
+                 └─ HBox.margin right="0", left="120"
+
+                 Assistant row template (LEFT-aligned):
+                 ┌─ HBox styleClass="assistantRow" spacing="10" alignment="TOP_LEFT"
+                 │   ├─ StackPane styleClass="avatarWrap" 36×36
+                 │   │   └─ ImageView fitH/W="20"
+                 │   └─ VBox styleClass="assistantBubble" spacing="6"
+                 │       ├─ Label styleClass="senderName"  text="WeatherGPT"
+                 │       ├─ Label styleClass="messageText" wrapText="true"
+                 │       └─ Label styleClass="timestamp"
+                 └─ HBox.margin right="120"
+                 ════════════════════════════════════════════════════ -->
+
+            <!-- ── Typing indicator (shown while assistant is processing) ── -->
+            <HBox fx:id="typingIndicator"
+                  styleClass="assistantRow"
+                  spacing="10"
+                  alignment="CENTER_LEFT"
+                  visible="false"
+                  managed="false">
+
+                <StackPane styleClass="avatarWrap"
+                           minWidth="36" minHeight="36"
+                           maxWidth="36" maxHeight="36">
+                    <ImageView fx:id="typingAvatar"
+                               fitHeight="20" fitWidth="20"
+                               preserveRatio="true"/>
+                </StackPane>
+
+                <HBox styleClass="typingBubble"
+                      spacing="6"
+                      alignment="CENTER_LEFT">
+                    <padding><Insets top="12" right="18" bottom="12" left="18"/></padding>
+                    <Circle radius="4" styleClass="typingDot"/>
+                    <Circle radius="4" styleClass="typingDot"/>
+                    <Circle radius="4" styleClass="typingDot"/>
+                </HBox>
+
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <!-- ══════════════════════════════════════════════════════════
+         INPUT BAR  —  message field + send button
+         ══════════════════════════════════════════════════════════ -->
+    <HBox styleClass="inputBar" alignment="CENTER" spacing="10">
+        <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
+
+        <!-- Clear conversation button -->
+        <Button fx:id="clearButton"
+                text="Clear"
+                styleClass="clearButton"/>
+
+        <!-- Message input -->
+        <TextField fx:id="inputField"
+                   styleClass="inputField"
+                   promptText="Ask about weather in your location…"
+                   HBox.hgrow="ALWAYS"/>
+
+        <!-- Send — defaultButton=true fires on Enter key -->
+        <Button fx:id="sendButton"
+                text="Send"
+                styleClass="sendButton"
+                defaultButton="true"/>
+    </HBox>
+
+    <!-- ══════════════════════════════════════════════════════════
+         NAV BAR  —  same pattern as Dashboard.fxml
+         "Weather Assistant" replaced with "← Dashboard"
+         ══════════════════════════════════════════════════════════ -->
+    <HBox styleClass="navBar" alignment="CENTER_LEFT" spacing="12">
+        <padding><Insets top="14" right="24" bottom="14" left="24"/></padding>
+        <Button text="← Dashboard"    styleClass="button"/>
+        <Button text="3-Day Forecast" styleClass="button"/>
+        <Button text="Manage Locations" styleClass="button"/>
+    </HBox>
+
+    <!-- ══════════════════════════════════════════════════════════
+         STATUS BAR  —  identical structure to Dashboard.fxml
+         ══════════════════════════════════════════════════════════ -->
+    <HBox styleClass="statusBar" alignment="CENTER_LEFT" spacing="8">
+        <padding><Insets top="6" left="20" bottom="6" right="20"/></padding>
+        <Circle radius="4" styleClass="statusDot"/>
+        <Label fx:id="statusLabel"
+               text="NWS API — Weather Assistant ready  ·  Chicago (Lat: 41.87, Lon: −87.62)"
+               styleClass="label"/>
+    </HBox>
+
+</VBox>
