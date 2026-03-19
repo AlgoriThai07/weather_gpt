@@ -114,8 +114,10 @@ public class Dashboard implements Initializable {
         ObservableList<String> locationNames = LocationManager.getInstance().getLocationNames();
         locationComboBox.setItems(locationNames);
 
+        String currentLocationName = LocationManager.getInstance().getCurrentLocationName();
+
         if (!locationNames.isEmpty()){
-            locationComboBox.getSelectionModel().selectFirst();
+            locationComboBox.getSelectionModel().select(currentLocationName);
         }
 
 //        Listen for location changes
@@ -244,11 +246,9 @@ public class Dashboard implements Initializable {
     }
 
 //    Load data for the selected location
-
     private void loadDefaultLocation() {
-        String first = locationComboBox.getSelectionModel().getSelectedItem();
-        if (first != null) {
-            LocationManager.getInstance().setCurrentLocation(first);
+        String exist = locationComboBox.getSelectionModel().getSelectedItem();
+        if (exist != null) {
             updateDashboard();
         }
     }
@@ -271,6 +271,7 @@ public class Dashboard implements Initializable {
                 PointData pointData = LocationManager.getInstance().getCurrentLocation();
                 if (pointData == null) {
                     error.showError("Location data not found");
+                    clearWeatherData();
                     return;
                 }
 
@@ -279,6 +280,7 @@ public class Dashboard implements Initializable {
 //                Fetch hourly forecast from the stored API route
                 ArrayList<HourlyPeriod> newHourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
                 if (newHourlyData == null || newHourlyData.isEmpty()) {
+                    clearWeatherData();
                     error.showError("Failed to fetch hourly forecast");
                     return;
                 }
@@ -287,6 +289,7 @@ public class Dashboard implements Initializable {
 //                Fetch forecast from the stored API route
                 ArrayList<Period> newForecastData = weatherApi.getForecastFromURL(pointData.forecast);
                 if (newForecastData == null || newForecastData.isEmpty()) {
+                    clearWeatherData();
                     error.showError("Failed to fetch forecast");
                     return;
                 }
@@ -296,6 +299,7 @@ public class Dashboard implements Initializable {
                 Platform.runLater(() -> populateDashboardUI());
             } catch (Exception e) {
                 e.printStackTrace();
+                clearWeatherData();
                 error.showError("Error loading weather data: " + e.getMessage());
             }
         }).start();
@@ -378,5 +382,32 @@ public class Dashboard implements Initializable {
         } catch (NumberFormatException e) {
             return 0.0;
         }
+    }
+
+//    Clear all weather UI when API call fails
+    private void clearWeatherData() {
+        Platform.runLater(() -> {
+//            Hero Panel
+            locationLabel.setText("Data Unavailable");
+            tempLabel.setText("--");
+            conditionLabel.setText("--");
+            dateLabel.setText("--");
+            setImage(conditionIcon, null);
+
+//            Condition Strip
+            feelsLikeValue.setText("--");
+            windValue.setText("--");
+            precipitationValue.setText("--");
+            humidityValue.setText("--");
+            dewpointValue.setText("--");
+
+//            Overview Text
+            overviewText.setText("Weather data is currently unavailable for this location. Please try again later.");
+
+//            24 hour forecast
+            if (hourlyTable != null) {
+                hourlyTable.getItems().clear();
+            }
+        });
     }
 }

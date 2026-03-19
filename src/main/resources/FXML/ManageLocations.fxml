@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<!--The main background container -->
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.ManageLocations"
+      prefHeight="600.0" prefWidth="850.0"
+      fx:id="root"
+      stylesheets="/styles/dashboard.css">
+
+    <!--Top bar -->
+    <StackPane styleClass="topBar">
+        <padding><Insets top="15" right="30" bottom="15" left="30"/></padding>
+        <!--Title -->
+        <Label text="Manage Locations" styleClass="title" StackPane.alignment="CENTER"/>
+        <BorderPane>
+
+            <left>
+                <Button text="←" onAction="#handleBack" styleClass="backButton" BorderPane.alignment="CENTER"/>
+            </left>
+
+            <right>
+                <Label fx:id="locationCountLabel" text="5 locations saved" style="-fx-text-fill: #738A9C; -fx-font-weight: bold;" BorderPane.alignment="CENTER"/>
+            </right>
+        </BorderPane>
+    </StackPane>
+
+    <!--Main split screen -->
+    <!--put the list and the add form side-by-side -->
+    <HBox VBox.vgrow="ALWAYS">
+
+        <!--Saved locations list -->
+        <VBox spacing="15" HBox.hgrow="ALWAYS" prefWidth="450" style="-fx-padding: 30;">
+            <Label text="SAVED LOCATIONS" style="-fx-font-weight: bold; -fx-text-fill: #738A9C; -fx-font-size: 12; -fx-letter-spacing: 1;"/>
+            <ListView fx:id="locationsListView" VBox.vgrow="ALWAYS" style="-fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #B0C4DE; -fx-background-color: white; -fx-padding: 2;"/>
+        </VBox>
+
+        <Separator orientation="VERTICAL" />
+
+        <!--Add new location area -->
+        <VBox prefWidth="380" style="-fx-padding: 30;">
+            <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #D3DCE6; -fx-border-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+
+                <!--Header -->
+                <HBox styleClass="topBar" style="-fx-background-radius: 11 11 0 0; -fx-padding: 15 20; -fx-border-color: #D3DCE6; -fx-border-width: 0 0 1 0;">
+                    <Label text="Add New Location" style="-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: #1A365D;"/>
+                </HBox>
+
+                <!--Inputs for the form -->
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    <!--Location name input (optional) -->
+                    <VBox spacing="5">
+                        <Label text="Location Name" style="-fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                        <TextField fx:id="nameInput" promptText="e.g. Seattle" style="-fx-padding: 10; -fx-background-radius: 6; -fx-border-color: #B0C4DE; -fx-border-radius: 6;"/>
+                    </VBox>
+
+                    <!--Lat and Lon inputs -->
+                    <HBox spacing="15">
+                        <!--Lat input -->
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Latitude" style="-fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                            <TextField fx:id="latInput" promptText="e.g. 47.60" style="-fx-padding: 10; -fx-background-radius: 6; -fx-border-color: #B0C4DE; -fx-border-radius: 6;"/>
+                        </VBox>
+                        <!--Lon input -->
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="Longitude" style="-fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                            <TextField fx:id="lonInput" promptText="e.g. -122.33" style="-fx-padding: 10; -fx-background-radius: 6; -fx-border-color: #B0C4DE; -fx-border-radius: 6;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!--Show errors -->
+                    <Label fx:id="statusLabel" text="" style="-fx-text-fill: #E67E22; -fx-font-size: 13;" wrapText="true"/>
+
+                    <!--Add location button -->
+                    <VBox styleClass="navBar" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                        <Button text="+ Add Location" maxWidth="9999" onAction="#handleAddLocation" styleClass="button" style="-fx-padding: 12; -fx-background-radius: 8;"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>
