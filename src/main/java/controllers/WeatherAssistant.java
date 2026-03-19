@@ -238,18 +238,20 @@ public class WeatherAssistant implements Initializable {
         new Thread(() -> {
             try {
 //                Fetch hourly forecast from the stored API route
-                hourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
-                if (hourlyData == null || hourlyData.isEmpty()) {
+                ArrayList<HourlyPeriod> newHourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
+                if (newHourlyData == null || newHourlyData.isEmpty()) {
                     error.showError("Failed to fetch hourly forecast");
                     return;
                 }
+                hourlyData = newHourlyData;
 
 //                Fetch forecast from the stored API route
-                forecastData = weatherApi.getForecastFromURL(pointData.forecast);
-                if (forecastData == null || forecastData.isEmpty()) {
+                ArrayList<Period> newForecastData = weatherApi.getForecastFromURL(pointData.forecast);
+                if (newForecastData == null || newForecastData.isEmpty()) {
                     error.showError("Failed to fetch forecast");
                     return;
                 }
+                forecastData = newForecastData;
 
                 Platform.runLater(() -> {
                     String updated = new SimpleDateFormat("h:mm a").format(new Date());

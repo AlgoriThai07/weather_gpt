@@ -136,7 +136,7 @@ public class WeatherAssistantService {
                 + Parser.formatTime(firstHighChance.startTime) : "at some point today";
 
         if (maxProbability >= 70) {
-            return "Rain is very likely at " + timing + " with a " + maxProbability + "% chance. Definitely bring an umbrella.";
+            return "Rain is very likely " + timing + " with a " + maxProbability + "% chance. Definitely bring an umbrella.";
         }
         return "There's a " + maxProbability + "% chance of rain, most likely " + timing
                 + ". Keeping an umbrella handy would be smart.";
@@ -227,6 +227,7 @@ public class WeatherAssistantService {
                         +  " "
                         +  (p.detailedForecast != null ? p.detailedForecast : ""))
                         .toLowerCase(Locale.ENGLISH);
+        String forecast = p.shortForecast != null ? p.shortForecast : (p.detailedForecast != null ? p.detailedForecast : "");
 //        Check for snowy weather
         boolean hasSnow = match(combined, "snow", "sleet", "flurr", "wintry");
 //        If there no snow
