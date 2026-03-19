@@ -31,8 +31,16 @@ public class LocationManager {
         chicagoLocation.city = "Chicago";
         chicagoLocation.state = "IL";
 
+        point.PointGeometry chicagoGeometry = new point.PointGeometry();
+        chicagoGeometry.type = "Point";
+        chicagoGeometry.coordinates = new java.util.ArrayList<>();
+        // Chicago's default lat/lon
+        chicagoGeometry.coordinates.add(-87.62);
+        chicagoGeometry.coordinates.add(41.87);
+
         RelativeLocation chicagoRelativeLocation = new RelativeLocation();
         chicagoRelativeLocation.properties = chicagoLocation;
+        chicagoRelativeLocation.geometry = chicagoGeometry;
 
         PointData chicagoData = new PointData();
         chicagoData.relativeLocation = chicagoRelativeLocation;
