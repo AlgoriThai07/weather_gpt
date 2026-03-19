@@ -101,6 +101,11 @@ public class Forecast {
                 api.MyWeatherAPI weatherApi = new api.MyWeatherAPI();
                 ArrayList<Period> forecastData = weatherApi.getForecastFromURL(location.forecast);
 
+                if (forecastData == null) {
+                    clearWeatherData();
+                    return;
+                }
+
                 Platform.runLater(() -> {
                     // Skip to the first day time period as sometimes the API starts with "Tonight"
                     int startIndex = 0;
@@ -199,6 +204,53 @@ public class Forecast {
         } catch (NumberFormatException e) {
             return 0.0;
         }
+    }
+
+//     Clear all weather UI when API call fails
+    private void clearWeatherData() {
+        Platform.runLater(() -> {
+//             General
+            locationLabel.setText("Location: Data Unavailable");
+            statusBarLabel.setText("Failed to load forecast data. Please try again.");
+
+            String defaultBoxStyle = "-fx-background-color: #7F8C8D; -fx-background-radius: 12 12 0 0; -fx-padding: 20;";
+
+//             Day 1 Reset
+            day1Label.setText("Day 1");
+            day1Date.setText("--");
+            day1Icon.setImage(null);
+            day1Condition.setText("--");
+            day1HighTemp.setText("--");
+            day1LowTemp.setText("--");
+            day1Wind.setText("--");
+            day1Precip.setText("--");
+            day1PrecipBar.setProgress(0.0);
+            day1TopBox.setStyle(defaultBoxStyle);
+
+//             Day 2 Reset
+            day2Label.setText("Day 2");
+            day2Date.setText("--");
+            day2Icon.setImage(null);
+            day2Condition.setText("--");
+            day2HighTemp.setText("--");
+            day2LowTemp.setText("--");
+            day2Wind.setText("--");
+            day2Precip.setText("--");
+            day2PrecipBar.setProgress(0.0);
+            day2TopBox.setStyle(defaultBoxStyle);
+
+//             Day 3 Reset
+            day3Label.setText("Day 3");
+            day3Date.setText("--");
+            day3Icon.setImage(null);
+            day3Condition.setText("--");
+            day3HighTemp.setText("--");
+            day3LowTemp.setText("--");
+            day3Wind.setText("--");
+            day3Precip.setText("--");
+            day3PrecipBar.setProgress(0.0);
+            day3TopBox.setStyle(defaultBoxStyle);
+        });
     }
 }
 
