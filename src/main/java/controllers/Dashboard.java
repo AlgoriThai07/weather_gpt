@@ -7,9 +7,7 @@ import hourlyWeather.WeatherTableEntry;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -21,6 +19,7 @@ import point.PointData;
 import utils.IconLoader;
 import hourlyWeather.HourlyEntryAdapter;
 import utils.LocationManager;
+import utils.ShowError;
 import weather.Period;
 
 import java.net.URL;
@@ -32,6 +31,7 @@ import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static utils.Parser.*;
+import static utils.SwitchScene.switchScene;
 
 public class Dashboard implements Initializable {
 
@@ -80,6 +80,7 @@ public class Dashboard implements Initializable {
     private ArrayList<HourlyPeriod> hourlyData;
     private PointData currentPointData;
     private ArrayList<Period> forecastData;
+    private ShowError error;
 
 //    Proxy
     private final WeatherApiService weatherApi = new CachedWeatherApiProxy(new api.MyWeatherAPI());
@@ -87,6 +88,7 @@ public class Dashboard implements Initializable {
 //    Initialize
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        error = new ShowError(statusBarLabel);
         loadStaticIcons();
         setupLocationComboBox();
         setupTableColumns();
@@ -246,57 +248,61 @@ public class Dashboard implements Initializable {
     private void loadDefaultLocation() {
         String first = locationComboBox.getSelectionModel().getSelectedItem();
         if (first != null) {
-            updateDashboard(first);
+            LocationManager.getInstance().setCurrentLocation(first);
+            updateDashboard();
         }
     }
     @FXML
     public void onLocationChanged() {
         String selected = locationComboBox.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            updateDashboard(selected);
+            LocationManager.getInstance().setCurrentLocation(selected);
+            updateDashboard();
         }
     }
 
 //    Call apis from MyWeatherApi
 //    Update the UI based on the selected location
-    private void updateDashboard(String locationName) {
+    private void updateDashboard() {
 //        Run api calls on background thread to avoid blocking UI
         new Thread(() -> {
             try {
 //                Get the PointData from LocationManager
-                PointData pointData = LocationManager.getInstance().getCurrentLocation(locationName);
+                PointData pointData = LocationManager.getInstance().getCurrentLocation();
                 if (pointData == null) {
-                    showError("Location data not found");
+                    error.showError("Location data not found");
                     return;
                 }
 
                 currentPointData = pointData;
 
 //                Fetch hourly forecast from the stored API route
-                hourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
-                if (hourlyData == null || hourlyData.isEmpty()) {
-                    showError("Failed to fetch hourly forecast");
+                ArrayList<HourlyPeriod> newHourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
+                if (newHourlyData == null || newHourlyData.isEmpty()) {
+                    error.showError("Failed to fetch hourly forecast");
                     return;
                 }
+                hourlyData = newHourlyData;
 
 //                Fetch forecast from the stored API route
-                forecastData = weatherApi.getForecastFromURL(pointData.forecast);
-                if (forecastData == null || forecastData.isEmpty()) {
-                    showError("Failed to fetch forecast");
+                ArrayList<Period> newForecastData = weatherApi.getForecastFromURL(pointData.forecast);
+                if (newForecastData == null || newForecastData.isEmpty()) {
+                    error.showError("Failed to fetch forecast");
                     return;
                 }
+                forecastData = newForecastData;
 
 //                Update UI on FX thread
-                Platform.runLater(() -> populateDashboardUI(locationName));
+                Platform.runLater(() -> populateDashboardUI());
             } catch (Exception e) {
                 e.printStackTrace();
-                showError("Error loading weather data: " + e.getMessage());
+                error.showError("Error loading weather data: " + e.getMessage());
             }
         }).start();
     }
 
 //    Populate all UI components with fetched data
-    private void populateDashboardUI(String locationName) {
+    private void populateDashboardUI() {
         if (currentPointData == null || hourlyData == null || hourlyData.isEmpty() || forecastData == null || forecastData.isEmpty()) {
             return;
         }
@@ -331,9 +337,9 @@ public class Dashboard implements Initializable {
 
 //        24 hour forecast
         ArrayList<WeatherTableEntry> hourlyEntries = new ArrayList<>();
-        for (int i = 0; i < hourlyData.size(); i++) {
+        for (HourlyPeriod hp : hourlyData) {
 //            Instantiate the Adapter and add it to the list
-            hourlyEntries.add(new HourlyEntryAdapter(hourlyData.get(i)));
+            hourlyEntries.add(new HourlyEntryAdapter(hp));
         }
         hourlyTable.setItems(observableArrayList(hourlyEntries));
 
@@ -351,23 +357,12 @@ public class Dashboard implements Initializable {
 
     @FXML
     private void handleNavigateAssistant() {
-        switchScene("Assistant");
+        switchScene("weatherAssistant");
     }
 
     @FXML
     private void handleNavigateLocations() {
         switchScene("ManageLocations");
-    }
-
-    private void switchScene(String fxmlName) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/" + fxmlName + ".fxml"));
-            Parent root = loader.load();
-            locationComboBox.getScene().setRoot(root);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showError("Failed to load scene: " + fxmlName);
-        }
     }
 
 //    private helper functions
@@ -383,10 +378,5 @@ public class Dashboard implements Initializable {
         } catch (NumberFormatException e) {
             return 0.0;
         }
-    }
-
-//    Show error messages in the status bar
-    private void showError(String message) {
-        Platform.runLater(() -> statusBarLabel.setText("Error: " + message));
     }
 }
