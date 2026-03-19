@@ -1,0 +1,343 @@
+.root {
+    -fx-background-color: #eaf3fb;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+}
+
+/*Top Bar*/
+.topBar {
+    -fx-background-color: linear-gradient(to bottom, #4a90c4, #357ab2);
+    -fx-border-color: transparent transparent #2e6a9e transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 48;
+    -fx-max-height: 48;
+}
+
+/*Back button*/
+.backButton {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: rgba(255, 255, 255, 0.30);
+    -fx-border-width: 1;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-padding: 3 10 3 10;
+    -fx-cursor: hand;
+}
+
+.backButton:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.28);
+    -fx-border-color: rgba(255, 255, 255, 0.55);
+}
+
+.backButton:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.40);
+}
+
+/*Icon wrapper*/
+.iconWrap {
+    -fx-background-color: rgba(255, 255, 255, 0.20);
+    -fx-background-radius: 8;
+    -fx-min-width: 34;
+    -fx-min-height: 34;
+    -fx-max-width: 34;
+    -fx-max-height: 34;
+    -fx-alignment: CENTER;
+}
+
+/*Title label*/
+.title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.97;
+}
+
+/*Chat scroll pane*/
+.chatScroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.chatScroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.chatScroll:focused {
+    -fx-border-color: transparent;
+}
+
+.chatScroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 7;
+}
+
+.chatScroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #aac6e0;
+    -fx-background-radius: 4;
+}
+
+.chatScroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #7faecf;
+}
+
+.chatScroll .scroll-bar:vertical .track,
+.chatScroll .scroll-bar:vertical .track-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.chatScroll .scroll-bar:vertical .increment-button,
+.chatScroll .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+    -fx-max-height: 0;
+    -fx-border-color: transparent;
+}
+
+.chatScroll .corner {
+    -fx-background-color: transparent;
+}
+
+/*Chat container*/
+.chatContainer {
+    -fx-background-color: #eaf3fb;
+    -fx-fill-width: true;
+}
+
+/*Date divider*/
+.chatContainer .dateDivider {
+    -fx-padding: 4 0 4 0;
+}
+
+.chatContainer .dateDivider .dividerLine {
+    -fx-background-color: #c0d8ed;
+    -fx-min-height: 1;
+    -fx-max-height: 1;
+    -fx-pref-height: 1;
+}
+
+.chatContainer .dateDivider .dividerLabel {
+    -fx-text-fill: #7fa8c9;
+    -fx-font-size: 11px;
+    -fx-background-color: #d6eaf8;
+    -fx-background-radius: 10;
+    -fx-padding: 2 10 2 10;
+}
+
+/*Assistant message row*/
+.chatContainer .assistantRow {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
+}
+
+/*Avatar wrapper*/
+.chatContainer .assistantRow .avatarWrap {
+    -fx-background-color: #3a7db5;
+    -fx-background-radius: 50%;
+    -fx-alignment: CENTER;
+}
+
+.chatContainer .assistantRow .assistantBubble {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 4 18 18 18;
+    -fx-border-color: #cce0f2;
+    -fx-border-radius: 4 18 18 18;
+    -fx-border-width: 1;
+    -fx-padding: 10 16 10 16;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 6, 0.0, 0, 2);
+}
+
+.chatContainer .assistantRow .assistantBubble .senderName {
+    -fx-text-fill: #3a7db5;
+    -fx-font-size: 11.5px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 1 0;
+}
+
+.chatContainer .assistantRow .assistantBubble .messageText {
+    -fx-text-fill: #1e2d3d;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 3;
+}
+
+.chatContainer .assistantRow .assistantBubble .timestamp {
+    -fx-text-fill: #9ab8d2;
+    -fx-font-size: 10.5px;
+    -fx-padding: 2 0 0 0;
+}
+
+/*User message row*/
+.chatContainer .userRow {
+    -fx-background-color: transparent;
+    -fx-alignment: TOP_RIGHT;
+    -fx-padding: 0 0 0 0;
+}
+
+.chatContainer .userRow .userBubble {
+    -fx-background-color: linear-gradient(to bottom, #4e98d0, #357ab2);
+    -fx-background-radius: 18 4 18 18;
+    -fx-border-radius: 18 4 18 18;
+    -fx-padding: 10 16 10 16;
+    -fx-effect: dropshadow(gaussian, rgba(53, 122, 178, 0.35), 6, 0.0, 0, 2);
+}
+
+.chatContainer .userRow .userBubble .messageText,
+.chatContainer .userRow .userBubble .label {
+    -fx-text-fill: #ffffff;
+}
+
+.chatContainer .userRow .userBubble .timestamp {
+    -fx-text-fill: rgba(255, 255, 255, 0.65);
+    -fx-font-size: 10.5px;
+}
+
+/*Quick reply*/
+.chatContainer .suggestionsRow {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 4 0;
+}
+
+.chatContainer .suggestionsRow .chipButton {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2e6da4;
+    -fx-font-size: 12px;
+    -fx-padding: 5 14 5 14;
+    -fx-background-radius: 20;
+    -fx-border-color: #a8cce5;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.chatContainer .suggestionsRow .chipButton:hover {
+    -fx-background-color: #daeef9;
+    -fx-border-color: #3a7db5;
+    -fx-text-fill: #1a4a72;
+    -fx-effect: dropshadow(gaussian, rgba(58, 125, 181, 0.18), 6, 0.0, 0, 1);
+}
+
+.chatContainer .suggestionsRow .chipButton:pressed {
+    -fx-background-color: #c4def4;
+    -fx-border-color: #245d92;
+}
+
+/*Typing indicator*/
+.chatContainer .typingBubble {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 4 18 18 18;
+    -fx-border-color: #cce0f2;
+    -fx-border-radius: 4 18 18 18;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.07), 5, 0.0, 0, 2);
+}
+
+.chatContainer .typingBubble .typingDot {
+    -fx-fill: #7aaed0;
+}
+
+/*Input bar*/
+.inputBar {
+    -fx-background-color: #ddeef9;
+    -fx-border-color: #b8d4eb transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+/*Clear button*/
+.inputBar .clearButton {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6e9ebc;
+    -fx-font-size: 12.5px;
+    -fx-padding: 6 14 6 14;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #a8c8e0;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.inputBar .clearButton:hover {
+    -fx-background-color: #c8dff0;
+    -fx-text-fill: #3a6d96;
+    -fx-border-color: #7aaeca;
+}
+
+.inputBar .clearButton:pressed {
+    -fx-background-color: #b0d0e8;
+}
+
+/*Input field*/
+.inputBar .inputField {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 22;
+    -fx-border-color: #b0cfe8;
+    -fx-border-radius: 22;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 16 8 16;
+    -fx-font-size: 13px;
+    -fx-text-fill: #1e2d3d;
+    -fx-prompt-text-fill: #96b8d3;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 5, 0.0, 0, 1);
+}
+
+.inputBar .inputField:focused {
+    -fx-border-color: #3a7db5;
+    -fx-effect: dropshadow(gaussian, rgba(58, 125, 181, 0.22), 8, 0.0, 0, 2);
+}
+
+/*Send button*/
+.inputBar .sendButton {
+    -fx-background-color: #3a7db5;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 22 8 22;
+    -fx-background-radius: 22;
+    -fx-border-radius: 22;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(58, 125, 181, 0.38), 7, 0.0, 0, 2);
+}
+
+.inputBar .sendButton:hover {
+    -fx-background-color: #2e6da4;
+    -fx-effect: dropshadow(gaussian, rgba(58, 125, 181, 0.55), 10, 0.0, 0, 3);
+}
+
+.inputBar .sendButton:pressed {
+    -fx-background-color: #245d92;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 4, 0.0, 0, 1);
+}
+
+.inputBar .sendButton:default {
+    -fx-background-color: #3a7db5;
+}
+
+.inputBar .sendButton:disabled {
+    -fx-background-color: #aacce6;
+    -fx-opacity: 0.7;
+    -fx-cursor: default;
+    -fx-effect: none;
+}
+
+/*statusBar*/
+.statusBar {
+    -fx-background-color: #daeaf7;
+    -fx-border-color:     #b0cfe8;
+    -fx-border-width:     1 0 0 0;
+}
+
+.statusBar .statusDot {
+    -fx-fill:   #22c55e;
+    -fx-stroke: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(34,197,94,0.55), 8, 0.0, 0, 0);
+}
+
+.statusBar .label {
+    -fx-font-size:   10px;
+    -fx-font-weight: normal;
+    -fx-text-fill:   #334155;
+}
