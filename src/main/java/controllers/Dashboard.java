@@ -327,7 +327,7 @@ public class Dashboard implements Initializable {
         );
 
         feelsLikeValue.setText(feelsLikeTemp + "°F");
-        windValue.setText(firstHour.windSpeed);
+        windValue.setText(firstHour.windSpeed + " " + firstHour.windDirection);
         precipitationValue.setText(formatPrecipitation(firstHour.probabilityOfPrecipitation));
         humidityValue.setText((int) humidity + "%");
         dewpointValue.setText((int) firstHour.dewpoint.value + "°F");
