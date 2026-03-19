@@ -114,8 +114,10 @@ public class Dashboard implements Initializable {
         ObservableList<String> locationNames = LocationManager.getInstance().getLocationNames();
         locationComboBox.setItems(locationNames);
 
+        String currentLocationName = LocationManager.getInstance().getCurrentLocationName();
+
         if (!locationNames.isEmpty()){
-            locationComboBox.getSelectionModel().selectFirst();
+            locationComboBox.getSelectionModel().select(currentLocationName);
         }
 
 //        Listen for location changes
@@ -244,11 +246,9 @@ public class Dashboard implements Initializable {
     }
 
 //    Load data for the selected location
-
     private void loadDefaultLocation() {
-        String first = locationComboBox.getSelectionModel().getSelectedItem();
-        if (first != null) {
-            LocationManager.getInstance().setCurrentLocation(first);
+        String exist = locationComboBox.getSelectionModel().getSelectedItem();
+        if (exist != null) {
             updateDashboard();
         }
     }

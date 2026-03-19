@@ -88,6 +88,10 @@ public class LocationManager {
         return null;
     }
 
+    public String getCurrentLocationName(){
+        return currentLocation.relativeLocation.properties.city + ", " + currentLocation.relativeLocation.properties.state;
+    }
+
     public PointData getCurrentLocation() {
         return currentLocation;
     }

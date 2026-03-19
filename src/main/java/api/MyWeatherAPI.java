@@ -34,6 +34,10 @@ public class MyWeatherAPI extends WeatherAPI implements WeatherApiService{
             System.err.println("Failed to parse JSon");
             return null;
         }
+        if (r.properties == null || r.properties.periods == null){
+            System.err.println("Failed to parse JSon");
+            return null;
+        }
         ArrayList<HourlyPeriod> allPeriods = r.properties.periods;
         ArrayList<HourlyPeriod> limitedPeriods = new ArrayList<>();
         for (int i = 0; i < Math.min(24, allPeriods.size()); i++) {
@@ -107,6 +111,10 @@ public class MyWeatherAPI extends WeatherAPI implements WeatherApiService{
             System.err.println("Failed to parse JSon");
             return null;
         }
+        if (r.properties == null || r.properties.periods == null){
+            System.err.println("Failed to parse JSon");
+            return null;
+        }
         return r.properties.periods;
     }
     @Override
@@ -127,6 +135,10 @@ public class MyWeatherAPI extends WeatherAPI implements WeatherApiService{
         }
         HourlyRoot r = getHourlyObject(response.body());
         if(r == null){
+            System.err.println("Failed to parse JSon");
+            return null;
+        }
+        if (r.properties == null || r.properties.periods == null){
             System.err.println("Failed to parse JSon");
             return null;
         }

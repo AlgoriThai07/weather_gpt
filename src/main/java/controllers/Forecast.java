@@ -85,7 +85,7 @@ public class Forecast {
     // Status bar
     @FXML private Label statusBarLabel;
 
-    // Current city
+    // Current location
     @FXML private Label locationLabel;
 
     // Load the data for each card
@@ -94,8 +94,8 @@ public class Forecast {
         // Run the API call in a background thread
         new Thread(() -> {
             try {
-                String city = LocationManager.getInstance().getLocationNames().get(0);
-                PointData location = LocationManager.getInstance().getLocationFromName(city);
+                PointData location = LocationManager.getInstance().getCurrentLocation();
+                String locationName = LocationManager.getInstance().getCurrentLocationName();
 
                 //Fetch the forecast list from the NWS API
                 api.MyWeatherAPI weatherApi = new api.MyWeatherAPI();
@@ -169,9 +169,9 @@ public class Forecast {
 
                     // NWS API update
                     String lastUpdated = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a").format(new Date());
-                    statusBarLabel.setText("NWS API — Last updated: " + lastUpdated + "  ·  " + city);
+                    statusBarLabel.setText("NWS API — Last updated: " + lastUpdated + "  ·  " + locationName);
 
-                    locationLabel.setText("Location: " + city);
+                    locationLabel.setText("Location: " + locationName);
                 });
             } catch (Exception e) {
                 System.out.println("Could not load weather: " + e.getMessage());
