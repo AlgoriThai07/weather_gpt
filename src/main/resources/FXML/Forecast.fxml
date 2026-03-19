@@ -21,7 +21,7 @@
         <Label text="3-Day Forecast" styleClass="title" StackPane.alignment="CENTER"/>
         <BorderPane>
             <left>
-                <Button text="← Back To Dashboard" onAction="#handleBack" styleClass="button" BorderPane.alignment="CENTER"/>
+                <Button text="←" onAction="#handleBack" styleClass="backButton" BorderPane.alignment="CENTER"/>
             </left>
             <right>
                 <Label fx:id="locationLabel" style="-fx-font-size: 16; -fx-text-fill: #1A365D; -fx-font-weight: bold;" BorderPane.alignment="CENTER"/>
@@ -36,7 +36,7 @@
         <!-- 1st Card -->
         <VBox HBox.hgrow="ALWAYS" maxWidth="400" prefWidth="260" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
             <!--Upper part of the card-->
-            <VBox fx:id="day1TopBox" alignment="CENTER" spacing="5" prefHeight="200" style="-fx-background-radius: 12 12 0 0; -fx-padding: 20;">
+            <VBox fx:id="day1TopBox" alignment="CENTER" spacing="5" VBox.vgrow="ALWAYS" style="-fx-background-radius: 12 12 0 0; -fx-padding: 20;">
                 <ImageView fx:id="day1Icon" fitWidth="80" fitHeight="80" preserveRatio="true"/>
                 <Label fx:id="day1Label" text="Monday" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
                 <Label fx:id="day1Date" text="Mar 6" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14;"/>
@@ -47,7 +47,7 @@
                 </VBox>
             </VBox>
             <!--Lower part of the card-->
-            <VBox spacing="15" style="-fx-padding: 20;">
+            <VBox spacing="15" VBox.vgrow="ALWAYS" style="-fx-padding: 20;">
                 <!--High and low temp-->
                 <VBox spacing="2">
                     <HBox alignment="CENTER_LEFT" spacing="5">
@@ -95,7 +95,7 @@
         <!-- 2nd Card -->
         <VBox HBox.hgrow="ALWAYS" maxWidth="400" prefWidth="260" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
             <!--Upper part of the card-->
-            <VBox fx:id="day2TopBox" alignment="CENTER" spacing="5" prefHeight="200" style="-fx-background-radius: 12 12 0 0; -fx-padding: 20;">
+            <VBox fx:id="day2TopBox" alignment="CENTER" spacing="5" VBox.vgrow="ALWAYS" style="-fx-background-radius: 12 12 0 0; -fx-padding: 20;">
                 <ImageView fx:id="day2Icon" fitWidth="80" fitHeight="80" preserveRatio="true"/>
                 <Label fx:id="day2Label" text="Tuesday" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
                 <Label fx:id="day2Date" text="Mar 7" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14;"/>
@@ -106,7 +106,7 @@
                 </VBox>
             </VBox>
             <!--Lower part of the card-->
-            <VBox spacing="15" style="-fx-padding: 20;">
+            <VBox spacing="15" VBox.vgrow="ALWAYS" style="-fx-padding: 20;">
                 <!--High and low temp-->
                 <VBox spacing="2">
                     <HBox alignment="CENTER_LEFT" spacing="5">
@@ -154,7 +154,7 @@
         <!-- 3rd Card -->
         <VBox HBox.hgrow="ALWAYS" maxWidth="400" prefWidth="260" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
             <!--Upper part of the card-->
-            <VBox fx:id="day3TopBox" alignment="CENTER" spacing="5" prefHeight="200" style="-fx-background-radius: 12 12 0 0; -fx-padding: 20;">
+            <VBox fx:id="day3TopBox" alignment="CENTER" spacing="5" VBox.vgrow="ALWAYS" style="-fx-background-radius: 12 12 0 0; -fx-padding: 20;">
                 <ImageView fx:id="day3Icon" fitWidth="80" fitHeight="80" preserveRatio="true"/>
                 <Label fx:id="day3Label" text="Wednesday" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
                 <Label fx:id="day3Date" text="Mar 8" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 14;"/>
@@ -165,7 +165,7 @@
                 </VBox>
             </VBox>
             <!--Lower part of the card-->
-            <VBox spacing="15" style="-fx-padding: 20;">
+            <VBox spacing="15" VBox.vgrow="ALWAYS" style="-fx-padding: 20;">
                 <!--High and low temp-->
                 <VBox spacing="2">
                     <HBox alignment="CENTER_LEFT" spacing="5">

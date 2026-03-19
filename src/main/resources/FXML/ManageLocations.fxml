@@ -19,7 +19,7 @@
         <BorderPane>
 
             <left>
-                <Button text="← Back To Dashboard" onAction="#handleBack" styleClass="button" BorderPane.alignment="CENTER"/>
+                <Button text="←" onAction="#handleBack" styleClass="backButton" BorderPane.alignment="CENTER"/>
             </left>
 
             <right>

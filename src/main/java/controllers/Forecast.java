@@ -206,7 +206,7 @@ public class Forecast {
         }
     }
 
-//     Clear all weather UI when API call fails
+    //     Clear all weather UI when API call fails
     private void clearWeatherData() {
         Platform.runLater(() -> {
 //             General
@@ -253,5 +253,3 @@ public class Forecast {
         });
     }
 }
-
-
