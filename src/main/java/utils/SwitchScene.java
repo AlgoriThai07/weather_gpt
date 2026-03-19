@@ -1,17 +1,14 @@
 package utils;
 
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
-import static utils.ShowError.showError;
 
 public class SwitchScene {
     private static Scene currentScene;
     private static Stage primaryStage;
+    private static final ShowError error = new ShowError(null);
 
     public static void setCurrentScene(Scene scene) {
         currentScene = scene;
@@ -36,7 +33,7 @@ public class SwitchScene {
             primaryStage.setScene(newScene);
         } catch (Exception e) {
             e.printStackTrace();
-            showError("Failed to load scene: " + fxmlName);
+            error.showError("Failed to load scene: " + fxmlName);
         }
     }
 }

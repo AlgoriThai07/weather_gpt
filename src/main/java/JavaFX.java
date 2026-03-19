@@ -1,21 +1,13 @@
-import hourlyWeather.HourlyPeriod;
 import javafx.application.Application;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import utils.IconLoader;
 import utils.SwitchScene;
-import weather.Period;
-import point.PointData;
-
-import java.util.ArrayList;
-
 public class JavaFX extends Application {
 
 	public static void main(String[] args) {

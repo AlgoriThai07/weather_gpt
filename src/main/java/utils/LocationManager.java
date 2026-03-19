@@ -86,6 +86,8 @@ public class LocationManager {
 
     public void setCurrentLocation(String locationName) {
         PointData currentLocation = getLocationFromName(locationName);
-        this.currentLocation = currentLocation;
+        if (currentLocation != null) {
+            this.currentLocation = currentLocation;
+        }
     }
 }

@@ -432,7 +432,7 @@ public class WeatherAssistantService {
         }
         String direction = diff < 0 ? "colder" : "warmer";
         return "It's " + temperature + "°F outside, but it feels "
-             + Math.abs(diff) + "°F " + direction + " (" + Math.round(feelsLike) + "°F) due to " + reason + ".";
+             + Math.round(Math.abs(diff)) + "°F " + direction + " (" + Math.round(feelsLike) + "°F) due to " + reason + ".";
     }
 
 //    Responses for overview

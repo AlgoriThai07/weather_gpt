@@ -31,7 +31,6 @@ import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static utils.Parser.*;
-import static utils.ShowError.showError;
 import static utils.SwitchScene.switchScene;
 
 public class Dashboard implements Initializable {
@@ -81,6 +80,7 @@ public class Dashboard implements Initializable {
     private ArrayList<HourlyPeriod> hourlyData;
     private PointData currentPointData;
     private ArrayList<Period> forecastData;
+    private ShowError error;
 
 //    Proxy
     private final WeatherApiService weatherApi = new CachedWeatherApiProxy(new api.MyWeatherAPI());
@@ -88,7 +88,7 @@ public class Dashboard implements Initializable {
 //    Initialize
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ShowError.setStatusBarLabel(statusBarLabel);
+        error = new ShowError(statusBarLabel);
         loadStaticIcons();
         setupLocationComboBox();
         setupTableColumns();
@@ -270,7 +270,7 @@ public class Dashboard implements Initializable {
 //                Get the PointData from LocationManager
                 PointData pointData = LocationManager.getInstance().getCurrentLocation();
                 if (pointData == null) {
-                    showError("Location data not found");
+                    error.showError("Location data not found");
                     return;
                 }
 
@@ -279,14 +279,14 @@ public class Dashboard implements Initializable {
 //                Fetch hourly forecast from the stored API route
                 hourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
                 if (hourlyData == null || hourlyData.isEmpty()) {
-                    showError("Failed to fetch hourly forecast");
+                    error.showError("Failed to fetch hourly forecast");
                     return;
                 }
 
 //                Fetch forecast from the stored API route
                 forecastData = weatherApi.getForecastFromURL(pointData.forecast);
                 if (forecastData == null || forecastData.isEmpty()) {
-                    showError("Failed to fetch forecast");
+                    error.showError("Failed to fetch forecast");
                     return;
                 }
 
@@ -294,7 +294,7 @@ public class Dashboard implements Initializable {
                 Platform.runLater(() -> populateDashboardUI());
             } catch (Exception e) {
                 e.printStackTrace();
-                showError("Error loading weather data: " + e.getMessage());
+                error.showError("Error loading weather data: " + e.getMessage());
             }
         }).start();
     }

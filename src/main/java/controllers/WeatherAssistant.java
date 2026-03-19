@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-import static utils.ShowError.showError;
 import static utils.SwitchScene.switchScene;
 
 public class WeatherAssistant implements Initializable {
@@ -52,6 +51,7 @@ public class WeatherAssistant implements Initializable {
 //    Internal state
     private ArrayList<Period> forecastData = new ArrayList<>();
     private ArrayList<HourlyPeriod> hourlyData = new ArrayList<>();
+    private ShowError error;
 
     private final WeatherApiService weatherApi = new CachedWeatherApiProxy(new api.MyWeatherAPI());
     private final WeatherAssistantService assistant = new WeatherAssistantService();
@@ -59,7 +59,7 @@ public class WeatherAssistant implements Initializable {
 //    Initialize
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ShowError.setStatusBarLabel(statusBarLabel);
+        error = new ShowError(statusBarLabel);
         loadStaticIcons();
         setupInputHandlers();
         loadWeatherData();
@@ -87,7 +87,7 @@ public class WeatherAssistant implements Initializable {
             chatContainer.getChildren().removeIf(node -> node.getStyleClass().contains("userRow") ||
                     (node.getStyleClass().contains("assistantRow") && node != typingIndicator && !isWelcomeRow(node)));
             inputField.clear();
-            showError("Conversation cleared.");
+            statusBarLabel.setText("Conversation cleared.");
         });
 
         // Quick suggestions
@@ -226,7 +226,7 @@ public class WeatherAssistant implements Initializable {
 //        Get the current location data
         PointData pointData = LocationManager.getInstance().getCurrentLocation();
         if (pointData == null) {
-            showError("Location data not found.");
+            error.showError("Location data not found.");
             return;
         }
         // Display location in top bar
@@ -240,14 +240,14 @@ public class WeatherAssistant implements Initializable {
 //                Fetch hourly forecast from the stored API route
                 hourlyData = weatherApi.getHourlyForecastFromURL(pointData.forecastHourly);
                 if (hourlyData == null || hourlyData.isEmpty()) {
-                    showError("Failed to fetch hourly forecast");
+                    error.showError("Failed to fetch hourly forecast");
                     return;
                 }
 
 //                Fetch forecast from the stored API route
                 forecastData = weatherApi.getForecastFromURL(pointData.forecast);
                 if (forecastData == null || forecastData.isEmpty()) {
-                    showError("Failed to fetch forecast");
+                    error.showError("Failed to fetch forecast");
                     return;
                 }
 
@@ -257,7 +257,7 @@ public class WeatherAssistant implements Initializable {
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                showError("Error loading weather data: " + e.getMessage());
+                error.showError("Error loading weather data: " + e.getMessage());
             }
         }).start();
     }
