@@ -27,9 +27,11 @@ public class SwitchScene {
             return;
         }
         try {
+            double width = primaryStage.getWidth();
+            double height = primaryStage.getHeight();
             FXMLLoader loader = new FXMLLoader(SwitchScene.class.getResource("/FXML/" + fxmlName + ".fxml"));
             Parent root = loader.load();
-            Scene newScene = new Scene(root);
+            Scene newScene = new Scene(root, width, height);
             currentScene = newScene;
             primaryStage.setScene(newScene);
         } catch (Exception e) {

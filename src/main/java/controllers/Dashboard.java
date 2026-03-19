@@ -7,9 +7,7 @@ import hourlyWeather.WeatherTableEntry;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -22,7 +20,6 @@ import utils.IconLoader;
 import hourlyWeather.HourlyEntryAdapter;
 import utils.LocationManager;
 import utils.ShowError;
-import utils.SwitchScene;
 import weather.Period;
 
 import java.net.URL;
@@ -251,25 +248,27 @@ public class Dashboard implements Initializable {
     private void loadDefaultLocation() {
         String first = locationComboBox.getSelectionModel().getSelectedItem();
         if (first != null) {
-            updateDashboard(first);
+            LocationManager.getInstance().setCurrentLocation(first);
+            updateDashboard();
         }
     }
     @FXML
     public void onLocationChanged() {
         String selected = locationComboBox.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            updateDashboard(selected);
+            LocationManager.getInstance().setCurrentLocation(selected);
+            updateDashboard();
         }
     }
 
 //    Call apis from MyWeatherApi
 //    Update the UI based on the selected location
-    private void updateDashboard(String locationName) {
+    private void updateDashboard() {
 //        Run api calls on background thread to avoid blocking UI
         new Thread(() -> {
             try {
 //                Get the PointData from LocationManager
-                PointData pointData = LocationManager.getInstance().getCurrentLocation(locationName);
+                PointData pointData = LocationManager.getInstance().getCurrentLocation();
                 if (pointData == null) {
                     showError("Location data not found");
                     return;
@@ -292,7 +291,7 @@ public class Dashboard implements Initializable {
                 }
 
 //                Update UI on FX thread
-                Platform.runLater(() -> populateDashboardUI(locationName));
+                Platform.runLater(() -> populateDashboardUI());
             } catch (Exception e) {
                 e.printStackTrace();
                 showError("Error loading weather data: " + e.getMessage());
@@ -301,7 +300,7 @@ public class Dashboard implements Initializable {
     }
 
 //    Populate all UI components with fetched data
-    private void populateDashboardUI(String locationName) {
+    private void populateDashboardUI() {
         if (currentPointData == null || hourlyData == null || hourlyData.isEmpty() || forecastData == null || forecastData.isEmpty()) {
             return;
         }
@@ -336,9 +335,9 @@ public class Dashboard implements Initializable {
 
 //        24 hour forecast
         ArrayList<WeatherTableEntry> hourlyEntries = new ArrayList<>();
-        for (int i = 0; i < hourlyData.size(); i++) {
+        for (HourlyPeriod hp : hourlyData) {
 //            Instantiate the Adapter and add it to the list
-            hourlyEntries.add(new HourlyEntryAdapter(hourlyData.get(i)));
+            hourlyEntries.add(new HourlyEntryAdapter(hp));
         }
         hourlyTable.setItems(observableArrayList(hourlyEntries));
 

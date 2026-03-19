@@ -49,7 +49,7 @@
             </HBox>
 
 <!--            Welcome message-->
-            <HBox styleClass="assistantRow" spacing="10" alignment="TOP_LEFT">
+            <HBox styleClass="assistantRow" spacing="10" alignment="TOP_LEFT" fx:id="welcomeMessage">
 
 <!--                Avatar-->
                 <StackPane styleClass="avatarWrap" minWidth="36" minHeight="36" maxWidth="36" maxHeight="36">
@@ -62,7 +62,7 @@
                     <HBox.margin><Insets right="120"/></HBox.margin>
                     <Label text="WeatherGPT" styleClass="senderName"/>
                     <Label styleClass="messageText" wrapText="true"
-                           text="Hi! I'm your AI-powered weather assistant. I can answer questions about current conditions, hourly or extended forecasts, precipitation chances, and help you plan around the weather. What would you like to know?"/>
+                           text="Hi! I'm your weather assistant. I can answer questions about current conditions, hourly or extended forecasts, precipitation chances, and help you plan around the weather. What would you like to know?"/>
                     <Label text="2:00 PM" styleClass="timestamp"/>
                 </VBox>
 

@@ -10,6 +10,7 @@ public class LocationManager {
     private static LocationManager instance;
     private final ObservableList<String> locationNames;
     private final ObservableList<PointData> locations;
+    private PointData currentLocation;
 
 
     private LocationManager() {
@@ -42,6 +43,7 @@ public class LocationManager {
         chicagoData.forecastHourly = "https://api.weather.gov/gridpoints/LOT/76,73/forecast/hourly";
 
         addLocation(chicagoData);
+        this.currentLocation = chicagoData;
     }
 
     public ObservableList<String> getLocationNames() {
@@ -70,11 +72,20 @@ public class LocationManager {
         }
     }
 
-    public PointData getCurrentLocation(String locationName){
+    public PointData getLocationFromName(String locationName){
         int index = locationNames.indexOf(locationName);
         if (index >= 0) {
             return locations.get(index);
         }
         return null;
+    }
+
+    public PointData getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(String locationName) {
+        PointData currentLocation = getLocationFromName(locationName);
+        this.currentLocation = currentLocation;
     }
 }
